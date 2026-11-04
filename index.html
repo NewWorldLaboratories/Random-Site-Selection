@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0C272E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Random Sites">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="New World Laboratories random sampling and test site selection to WA 0.1, AS 1289.1.4.1 and AS 1289.1.4.2.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Random Site Locator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: field tool. Sticky header with step rail, one step on screen at a time, fixed Back/Next bar for thumbs. New World Laboratories navy + green. */
+:root{
+  --bg:#EDF2F1; --surface:#FFFFFF; --sunk:#F4F7F6; --ink:#0C272E; --muted:#526B6E; --line:#D0DCDA;
+  --brand:#16B28B; --accent:#0B7F62; --accent-ink:#FFFFFF; --accent-soft:#DDF4EC;
+  --asphalt:#3A4246; --marking:#F2C230; --hatch:#97A6A8;
+  --ok:#0B7F62; --ok-soft:#DDF4EC; --warn:#A16207; --warn-soft:#FBF1D9; --bad:#B42318; --bad-soft:#FBE4E1;
+  --f-display:"Montserrat","Segoe UI",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1B20; --surface:#10262C; --sunk:#0D2026; --ink:#E6EEEC; --muted:#93AAAB; --line:#213D43;
+  --brand:#16B28B; --accent:#22C79D; --accent-ink:#07211A; --accent-soft:#103A30;
+  --asphalt:#2B3236; --marking:#E9B71E; --hatch:#6A7A7D;
+  --ok:#22C79D; --ok-soft:#103A30; --warn:#E3B341; --warn-soft:#33290F; --bad:#FF7B6E; --bad-soft:#3A1A17;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1B20; --surface:#10262C; --sunk:#0D2026; --ink:#E6EEEC; --muted:#93AAAB; --line:#213D43;
+  --brand:#16B28B; --accent:#22C79D; --accent-ink:#07211A; --accent-soft:#103A30;
+  --asphalt:#2B3236; --marking:#E9B71E; --hatch:#6A7A7D;
+  --ok:#22C79D; --ok-soft:#103A30; --warn:#E3B341; --warn-soft:#33290F; --bad:#FF7B6E; --bad-soft:#3A1A17;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;text-wrap:balance;margin:0}
+h2{font-size:1.4rem;line-height:1.15}
+h3{font-size:.9rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.logo-d{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo-l{display:none}:root:not([data-theme="light"]) .logo-d{display:block}}
+:root[data-theme="dark"] .logo-l{display:none}:root[data-theme="dark"] .logo-d{display:block}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .bar{display:flex;align-items:center;gap:12px;padding-block:10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.brand img{height:38px;width:auto;flex:none}
+.brand div{min-width:0}
+.brand em{font-style:normal;display:block;font:600 .66rem var(--f-display);letter-spacing:.2em;text-transform:uppercase;color:var(--brand)}
+.brand b{font-family:var(--f-display);font-size:1.02rem;white-space:nowrap;display:block}
+.brand small{display:block;color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved{color:var(--ok);font-weight:600}
+.saved.bad{color:var(--bad)}
+.steps{display:flex;gap:4px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps button{flex:none;border:0;background:transparent;color:var(--muted);font:600 .95rem var(--f-body);padding:8px 12px;border-radius:999px;display:flex;gap:6px;align-items:center;cursor:pointer}
+.steps button i{font-style:normal;font-family:var(--f-mono);font-size:.78rem;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;border:1.5px solid currentColor}
+.steps button[aria-current="step"]{background:var(--ink);color:var(--surface)}
+.steps button.done i{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.badge{font:600 .75rem var(--f-mono);background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 7px}
+
+main{padding-block:18px;display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:14px;min-width:0}
+.card.sunk{background:var(--sunk)}
+.hint{color:var(--muted);font-size:.92rem;max-width:68ch}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))}
+.grid.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.lane .grid,.excl .grid,.grid.tight{grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr))}
+label.f{display:grid;gap:4px;font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:0}
+input,select,textarea{font:500 1rem var(--f-body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:10px 11px;min-height:46px;width:100%;min-width:0}
+input.mono{font-family:var(--f-mono)}
+input[type=range]{padding:0;border:0;min-height:36px;accent-color:var(--accent);background:transparent}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn{font:600 1rem var(--f-body);border-radius:8px;padding:11px 16px;min-height:46px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.small{min-height:38px;padding:6px 11px;font-size:.92rem}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.check{display:flex;gap:10px;align-items:center;font-weight:600;cursor:pointer}
+.check input{width:22px;height:22px;min-height:0;flex:none;accent-color:var(--accent)}
+
+.methods{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.method{position:relative;border:1.5px solid var(--line);border-radius:var(--r);padding:12px 14px 12px 44px;cursor:pointer;display:grid;gap:2px;background:var(--surface)}
+.method input{position:absolute;left:14px;top:15px;width:20px;height:20px;min-height:0;accent-color:var(--accent)}
+.method b{font-family:var(--f-display);font-size:1rem}
+.method span{font-size:.88rem;color:var(--muted)}
+.method:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg label{padding:9px 14px;cursor:pointer;font-weight:600;font-size:.95rem}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--ink);color:var(--surface)}
+
+.lane{border:1.5px solid var(--line);border-left:6px solid var(--brand);border-radius:var(--r);padding:12px;display:grid;gap:10px;background:var(--surface)}
+.lane header{display:flex;align-items:center;gap:8px}
+.lane header b{font-family:var(--f-display);font-size:1rem}
+.excl{border:1.5px dashed var(--hatch);border-radius:var(--r);padding:12px;display:grid;gap:10px}
+#lotSummary{display:grid;gap:12px;min-width:0}
+
+.stats{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr))}
+.stats div{background:var(--surface);padding:10px 12px;display:grid;gap:2px;min-width:0}
+.stats span{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.stats b{font-family:var(--f-mono);font-weight:500;font-size:1.05rem;overflow-wrap:anywhere}
+.msg{border-radius:8px;padding:10px 12px;font-size:.93rem;display:grid;gap:4px}
+.msg.bad{background:var(--bad-soft);color:var(--bad)}
+.msg.warn{background:var(--warn-soft);color:var(--warn)}
+.msg.ok{background:var(--ok-soft);color:var(--ok)}
+
+/* schematic */
+.schem{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--sunk)}
+.schem svg{display:block;min-width:640px;width:100%;height:auto}
+svg .ln{fill:var(--asphalt)} svg .jt{fill:var(--marking);opacity:.35} svg .hl{stroke:var(--hatch);stroke-width:1.2}
+svg .sl{stroke:#FFFFFF;stroke-opacity:.75;stroke-width:1.4;stroke-dasharray:4 4}
+svg .st{fill:var(--brand);stroke:#FFFFFF;stroke-width:1.5} svg .st.mv{fill:var(--warn)} svg .st.dn{fill:#FFFFFF;stroke:var(--brand);stroke-width:2.5}
+svg .stt{fill:#FFFFFF;font:600 10px var(--f-mono);text-anchor:middle;dominant-baseline:central} svg .stt.dn{fill:#0C272E}
+svg .tk{stroke:var(--muted);stroke-width:1} svg .tt{fill:var(--muted);font:10px var(--f-mono);text-anchor:middle}
+svg .lt{fill:var(--ink);font:600 12px var(--f-body)} svg .ltm{fill:var(--muted);font:10px var(--f-mono)}
+svg .slt{fill:#FFFFFF;fill-opacity:.6;font:600 9px var(--f-mono)}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--sunk);font-weight:600}
+td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font:600 .74rem var(--f-body);padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.mut{background:var(--sunk);color:var(--muted);border:1px solid var(--line)} .pill.acc{background:var(--ink);color:var(--surface)}
+
+/* site cards */
+.sites{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.site{border:1.5px solid var(--line);border-radius:var(--r);background:var(--surface);padding:12px;display:grid;gap:10px}
+.site.done{border-color:var(--ok)} .site.moved{border-color:var(--warn)}
+.site .hd{display:flex;align-items:center;gap:10px}
+.dot{width:34px;height:34px;flex:none;border-radius:50%;background:var(--brand);color:#FFFFFF;display:grid;place-items:center;font:600 .95rem var(--f-mono)}
+.site.done .dot{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 3px var(--brand)} .site.moved .dot{background:var(--warn);color:#fff}
+.site .loc{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.site .loc div{background:var(--sunk);border-radius:8px;padding:8px 10px;min-width:0}
+.site .loc span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.site .loc b{font:500 1.3rem var(--f-mono)}
+.site details summary{cursor:pointer;color:var(--muted);font-weight:600;font-size:.92rem;padding-block:4px}
+.site details[open]{display:grid;gap:10px}
+
+/* plan overlay */
+.mapscroll{overflow:auto;max-height:72vh;border:1px solid var(--line);border-radius:var(--r);background:var(--sunk);touch-action:pan-x pan-y pinch-zoom}
+.mapinner{position:relative;width:calc(var(--z,1) * 100%)}
+.mapinner img{display:block;width:100%;height:auto;user-select:none;-webkit-user-drag:none}
+.mapinner svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mapinner.armed{cursor:crosshair}
+.ptlist{display:grid;gap:8px}
+.pt{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+.pt b{font:600 .9rem var(--f-mono);background:var(--ink);color:var(--surface);border-radius:6px;padding:4px 8px}
+.slider{display:grid;gap:2px}
+.slider .lab{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.slider output{font-family:var(--f-mono);color:var(--ink);text-transform:none;letter-spacing:0}
+.drop{border:2px dashed var(--line);border-radius:var(--r);padding:28px 16px;text-align:center;color:var(--muted);display:grid;gap:8px;justify-items:center}
+
+/* bottom bar */
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--surface);border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-top:10px}
+.bottom .wrap{display:flex;gap:10px}
+.bottom .btn{flex:1}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-weight:600;z-index:40;max-width:calc(100% - 32px)}
+
+/* lots sheet */
+.scrim{position:fixed;inset:0;background:rgba(6,18,22,.55);z-index:30;display:grid;align-items:end;justify-items:center}
+.sheet{background:var(--surface);width:100%;max-width:680px;max-height:88vh;overflow:auto;border-radius:14px 14px 0 0;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:grid;gap:12px}
+.joblist{display:grid;gap:8px}
+.daylabel{font:600 .78rem var(--f-body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:4px}
+.job{display:flex;gap:10px;align-items:center;border:1.5px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.job input{width:22px;height:22px;min-height:0;flex:none;accent-color:var(--accent)}
+.job div{flex:1;min-width:0}
+.job b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.job small{color:var(--muted)}
+.job.cur{border-color:var(--accent)}
+.confirm{background:var(--bad-soft);border-radius:8px;padding:10px;display:grid;gap:8px;color:var(--bad)}
+
+/* report preview */
+.rpbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 118px);z-index:5;background:var(--bg);padding-block:8px;display:flex;gap:8px;flex-wrap:wrap}
+.report-host{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:#FFFFFF}
+@media (prefers-reduced-motion:no-preference){.btn,.steps button{transition:background .15s,border-color .15s,color .15s}}
+#printArea{display:none}
+@media print{body.printing>*:not(#printArea){display:none!important}body.printing #printArea{display:block}body.printing{padding:0!important;background:#fff}body.printing::before{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <div class="brand"><img class="logo-l" src="data:image/png;base64,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" alt="New World Laboratories"><img class="logo-d" src="data:image/png;base64,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" alt="New World Laboratories"><div><em>New World Laboratories</em><b>Random Site Locator</b><small id="jobName"></small></div></div>
+      <a class="btn small ghost" id="btnHelp" href="guide.html" target="_blank" rel="noopener">Help</a><button class="btn small" id="btnJobs" type="button">Lots <span class="badge" id="lotCount">0</span></button>
+    </div>
+    <nav class="steps" id="steps" aria-label="Steps"></nav>
+  </div>
+</header>
+<main class="wrap" id="main"><section class="card"><p class="hint">Loading lots saved on this device…</p></section></main>
+<div class="bottom"><div class="wrap"><button class="btn" id="btnBack" type="button">Back</button><button class="btn dark" id="btnNext" type="button">Next</button></div></div>
+<div id="toast" hidden role="status"></div>
+<div id="sheetHost"></div>
+<input type="file" id="fileImport" accept=".json,application/json" multiple hidden>
+<input type="file" id="fileCam" accept="image/*" capture="environment" hidden>
+<input type="file" id="filePick" accept="image/*" hidden>
+
+<script>
+"use strict";
+const APP_VERSION="1.0.0";
+const LOGO="data:image/png;base64,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";
+/* ---------- standards ---------- */
+const METHODS = {
+  "WA01-S": { std:"WA 0.1", title:"WA 0.1 Stratified", sub:"Main Roads WA 2019 · cl 4.2", strat:true, weight:"area",
+    clauseArea:"cl 4.2.1 Stratified, rectangular area", clauseQty:"cl 4.2.4 Stratified, time basis",
+    note:"Lot divided into sub-lots of approximately equal area, one site per sub-lot (cl 4.2.1(c)). Sub-lots run on continuously from one paver run to the next, as in Figure 3 (asphalt)." },
+  "WA01-U": { std:"WA 0.1", title:"WA 0.1 Unstratified", sub:"Main Roads WA 2019 · cl 4.1", strat:false, weight:"area",
+    clauseArea:"cl 4.1.1 Unstratified, rectangular area", clauseQty:"cl 4.1.4 Unstratified, time basis",
+    note:"Every part of the lot has an equal and independent chance of selection (cl 2(c)). Duplicate sites are discarded and redrawn (cl 4.3.1 note)." },
+  "AS1414": { std:"AS 1289.1.4.1", title:"AS 1289.1.4.1", sub:"Random number method · cl 3.2", strat:false, weight:"length",
+    clauseArea:"cl 3.2 Selection of test and sampling sites", clauseQty:"cl 3.3 Sampling by time, tonnage or volume",
+    note:"Longitudinal distance = r₁ × L from the start chainage; lateral distance = r_w × Wₙ from the datum edge, where Wₙ is the width at that chainage excluding edge distances (cl 3.2(d))." },
+  "AS1442": { std:"AS 1289.1.4.2", title:"AS 1289.1.4.2", sub:"Stratified random number method · cl 3.2–3.4", strat:true, weight:"length",
+    clauseArea:"cl 3.2–3.4 Stratified longitudinal location", clauseQty:"cl 3.5 Stratified by time, tonnage or volume",
+    note:"Length divided into N strata of S = L / N. Each site is r₁ × S from the start of its stratum; lateral r_w × Wₙ with width not stratified (cl 3.3.2.2)." }
+};
+const TEST_TYPES = ["Asphalt coring (density / thickness)","Nuclear density (in situ)","Sand replacement density","Material sampling","Other"];
+const STEPS = [["job","Job"],["lot","Lot"],["draw","Draw"],["map","Plan"],["field","On site"],["report","Report"]];
+
+/* ---------- random ---------- */
+function rnd(dp=4){ const a=new Uint32Array(1); crypto.getRandomValues(a); const k=Math.pow(10,dp); return Math.floor(a[0]/4294967296*k)/k; }
+function rndInt(lo,hi){ const a=new Uint32Array(1); crypto.getRandomValues(a); return lo+Math.floor(a[0]/4294967296*(hi-lo+1)); }
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+
+/* ---------- state ---------- */
+let jobs={}, S=null, step="job", armed=false, zoom=1, pendingDelete=null, sel=new Set();
+const today=()=>{ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+function blankJob(){
+  return { id:uid(), created:new Date().toISOString(), updated:new Date().toISOString(),
+    job:{client:"",project:"",location:"",ticket:"",clientRef:"",date:today(),tech:"",lotNo:"",material:"",testType:TEST_TYPES[0],notes:""},
+    method:"WA01-S", basis:"area", delin:"ch", datum:"Left-hand edge of seal (looking in direction of increasing chainage)",
+    exclJoint:"0.3", exclEnd:"0.5", n:"6",
+    lanes:[{id:uid(),name:"Paver run 1",start:"",end:"",width:"3.5",dOff:"0"}],
+    exclusions:[], qty:{kind:"Tonnage",unit:"t",total:"",startClock:""},
+    subset:{on:false,k:"3",label:"MDD / lab sample"},
+    draws:[], photo:null, photoW:0, photoH:0, cal:blankCal(), field:{} };
+}
+function blankCal(){ return {pts:[],side:"1",shift:"0",stretch:"1",opacity:"0.85"}; }
+function exampleJob(){
+  const j=blankJob();
+  Object.assign(j.job,{client:"EXAMPLE – replace with your job",project:"Example dual-run asphalt lot",location:"Northbound carriageway",ticket:"EX-0001",clientRef:"Lot 14",lotNo:"AC14-07",material:"AC14 wearing course, 40 mm"});
+  j.n="10";
+  j.lanes=[{id:uid(),name:"Paver run 1 (Lane 1)",start:"100",end:"360",width:"3.5",dOff:"0"},
+           {id:uid(),name:"Paver run 2 (Lane 2)",start:"100",end:"360",width:"3.6",dOff:"3.5"}];
+  j.exclusions=[{id:uid(),from:"285",to:"300",lane:"all",reason:"Bridge deck"}];
+  drawSites(j,"");
+  return j;
+}
+function normalise(j){ j.cal=j.cal||blankCal(); j.field=j.field||{}; j.draws=j.draws||[]; j.subset=j.subset||{on:false,k:"3",label:"MDD / lab sample"}; j.qty=j.qty||{kind:"Tonnage",unit:"t",total:"",startClock:""}; delete j.marks; return j; }
+
+/* ---------- storage: IndexedDB on this device (falls back to localStorage) ---------- */
+const DBN="nwl-random-sites", ST="lots", LS="nwl.rsl.lots", LS_CUR="nwl.rsl.cur";
+let idb=null, saveT=null, lastSaved=null, saveOk=true;
+function openDB(){ return new Promise(res=>{ try{ const r=indexedDB.open(DBN,1);
+  r.onupgradeneeded=()=>r.result.createObjectStore(ST,{keyPath:"id"}); r.onsuccess=()=>res(r.result); r.onerror=()=>res(null); r.onblocked=()=>res(null); }catch(e){ res(null); } }); }
+function idbAll(){ return new Promise(res=>{ try{ const out={}; const c=idb.transaction(ST).objectStore(ST).openCursor();
+  c.onsuccess=e=>{ const k=e.target.result; if(k){ out[k.value.id]=k.value; k.continue(); } else res(out); }; c.onerror=()=>res({}); }catch(e){ res({}); } }); }
+async function loadAll(){
+  idb=await openDB();
+  if(idb) jobs=await idbAll();
+  if(!idb){ try{ jobs=JSON.parse(localStorage.getItem(LS)||"{}")||{}; }catch(e){ jobs={}; } }
+  try{ const old=JSON.parse(localStorage.getItem("rsl.jobs.v1")||"{}"); for(const k in old) if(!jobs[k]){ jobs[k]=old[k]; if(idb) persist(old[k]); } localStorage.removeItem("rsl.jobs.v1"); }catch(e){}
+  Object.values(jobs).forEach(normalise);
+  let cur=null; try{ cur=localStorage.getItem(LS_CUR); }catch(e){}
+  if(cur&&jobs[cur]) S=jobs[cur];
+  else { const l=Object.values(jobs).sort((a,b)=>b.updated.localeCompare(a.updated)); S=l[0]||null; }
+  if(!S){ S=exampleJob(); jobs[S.id]=S; persist(S); }
+  try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(()=>{}); }catch(e){}
+}
+function persist(j){
+  const done=ok=>{ saveOk=ok; if(ok) lastSaved=new Date(); renderSaved(); };
+  if(idb){ try{ const tx=idb.transaction(ST,"readwrite"); tx.objectStore(ST).put(JSON.parse(JSON.stringify(j))); tx.oncomplete=()=>done(true); tx.onerror=tx.onabort=()=>done(false); }catch(e){ done(false); } }
+  else { try{ localStorage.setItem(LS,JSON.stringify(jobs)); done(true); }catch(e){ done(false); } }
+  try{ localStorage.setItem(LS_CUR,S.id); }catch(e){}
+}
+function removeStored(id){ if(idb){ try{ idb.transaction(ST,"readwrite").objectStore(ST).delete(id); }catch(e){} } else { try{ localStorage.setItem(LS,JSON.stringify(jobs)); }catch(e){} } }
+function save(){ S.updated=new Date().toISOString(); jobs[S.id]=S; clearTimeout(saveT); saveT=setTimeout(()=>persist(S),300); }
+function flush(){ if(saveT){ clearTimeout(saveT); saveT=null; persist(S); } }
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") flush(); });
+
+const getP=(o,p)=>p.split(".").reduce((a,k)=>a==null?a:a[k],o);
+function setP(o,p,v){ const ks=p.split("."); let a=o; for(let i=0;i<ks.length-1;i++) a=a[ks[i]]; a[ks[ks.length-1]]=v; }
+const curDraw=(j=S)=>j.draws.length?j.draws[j.draws.length-1]:null;
+function withJob(j,fn){ const keep=S; S=j; try{ return fn(); } finally { S=keep; } }
+
+/* ---------- units ---------- */
+const num=v=>{ if(v===""||v==null) return NaN; return Number(String(v).replace(",",".")); };
+const toM=(v,j=S)=> j.delin==="slk" ? num(v)*1000 : num(v);
+const posLabel=(j=S)=> j.delin==="slk" ? "SLK (km)" : "Chainage (m)";
+const posShort=(j=S)=> j.delin==="slk" ? "SLK" : "Ch";
+const fmtPos=(m,j=S)=> !isFinite(m) ? "–" : (j.delin==="slk" ? (m/1000).toFixed(4) : m.toFixed(1));
+const f1=v=>isFinite(v)?v.toFixed(1):"–", f2=v=>isFinite(v)?v.toFixed(2):"–";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- geometry ---------- */
+function geometry(j=S){
+  const m=METHODS[j.method], errs=[], warns=[], lanes=[];
+  const eJ=num(j.exclJoint)||0, eE=num(j.exclEnd)||0, N=Math.round(num(j.n));
+  if(!(N>=1)) errs.push("Enter the number of sites (at least 1).");
+  if(j.basis==="qty"){ const T=num(j.qty.total); if(!(T>0)) errs.push("Enter the total "+j.qty.kind.toLowerCase()+" for the lot."); return {errs,warns,N,T,qty:true,S:T/N,lanes:[]}; }
+  if(!j.lanes.length) errs.push("Add at least one lane or paver run.");
+  j.lanes.forEach((ln,i)=>{
+    const nm=ln.name||("Lane "+(i+1));
+    const a=toM(ln.start,j), b=toM(ln.end,j), w=num(ln.width), dOff=num(ln.dOff)||0;
+    if(!isFinite(a)||!isFinite(b)){ errs.push(nm+": enter start and end "+(j.delin==="slk"?"SLK.":"chainage.")); return; }
+    if(a===b){ errs.push(nm+": start and end are the same."); return; }
+    if(!(w>0)){ errs.push(nm+": enter the width."); return; }
+    const uw=w-2*eJ; if(!(uw>0)){ errs.push(nm+": width "+w+" m is not more than twice the joint/edge clearance ("+eJ+" m)."); return; }
+    const dir=b>=a?1:-1, lo=Math.min(a,b), hi=Math.max(a,b);
+    const blocks=[[lo-1,lo+eE],[hi-eE,hi+1]], zones=[];
+    j.exclusions.forEach(x=>{ if(x.lane!=="all"&&x.lane!==ln.id) return;
+      const f=toM(x.from,j), t=toM(x.to,j); if(!isFinite(f)||!isFinite(t)) return;
+      const zl=Math.min(f,t), zh=Math.max(f,t); if(zh<lo||zl>hi) return;
+      zones.push([Math.max(zl,lo),Math.min(zh,hi),x.reason||"Excluded"]); blocks.push([zl-eE,zh+eE]); });
+    blocks.sort((p,q)=>p[0]-q[0]);
+    let cur=lo; const ivs=[];
+    for(const [f,t] of blocks){ if(f>cur) ivs.push([cur,Math.min(f,hi)]); cur=Math.max(cur,t); if(cur>=hi) break; }
+    if(cur<hi) ivs.push([cur,hi]);
+    let use=ivs.filter(v=>v[1]-v[0]>0.05); if(dir<0) use=use.slice().reverse();
+    const len=use.reduce((s,v)=>s+v[1]-v[0],0);
+    if(len<=0) errs.push(nm+": nothing left to test after exclusions.");
+    lanes.push({id:ln.id,name:nm,idx:i,a,b,lo,hi,dir,w,uw,dOff,ivs:use,len,zones});
+  });
+  const segs=[]; let U=0;
+  lanes.forEach(L=>L.ivs.forEach(v=>{ const wpm=m.weight==="area"?L.uw:1, len=v[1]-v[0];
+    segs.push({lane:L,s:L.dir>0?v[0]:v[1],len,wpm,U0:U,U:len*wpm}); U+=len*wpm; }));
+  const Ltot=lanes.reduce((s,L)=>s+L.len,0), Atot=lanes.reduce((s,L)=>s+L.len*L.uw,0);
+  if(isFinite(N)&&N>0&&U>0&&Ltot/N<2) warns.push("Sites are less than 2 m apart on average. Check the number of sites and the lot length.");
+  if(m.weight==="length"&&new Set(lanes.map(L=>L.uw.toFixed(2))).size>1) warns.push("Lanes have different widths. AS 1289 strata are equal lengths, so narrower lanes get proportionally more sites per m². Use WA 0.1 if equal-area sub-lots are required.");
+  return {errs,warns,N,lanes,segs,U,Ltot,Atot,S:U/N,eJ,eE,qty:false};
+}
+function mapU(g,u){ let sg=g.segs[g.segs.length-1]; for(const s of g.segs){ if(u<s.U0+s.U){ sg=s; break; } }
+  const d=Math.min(sg.len,Math.max(0,(u-sg.U0)/sg.wpm)); return {lane:sg.lane, ch: sg.s + sg.lane.dir*d}; }
+function gaps(L){ const iv=L.ivs.slice().sort((a,b)=>a[0]-b[0]); const out=[]; let c=L.lo; iv.concat([[L.hi,L.hi]]).forEach(v=>{ if(v[0]-c>0.01) out.push([c,v[0]]); c=Math.max(c,v[1]); }); return out; }
+
+/* ---------- draw ---------- */
+function drawSites(j,reason){
+  const g=geometry(j); if(g.errs.length) return false;
+  const m=METHODS[j.method], N=g.N, out={at:new Date().toISOString(),reason:reason||"",method:j.method,basis:j.basis,N,sites:[],log:[],strata:[]};
+  if(g.qty){ const T=num(j.qty.total);
+    for(let i=1;i<=N;i++){ const r=rnd(); out.sites.push({no:i,r,val:m.strat?(i-1)*g.S+r*g.S:r*T,s0:m.strat?(i-1)*g.S:0,s1:m.strat?i*g.S:T}); }
+    if(!m.strat) out.sites.sort((a,b)=>a.val-b.val).forEach((s,i)=>s.no=i+1);
+    out.T=T; out.S=g.S;
+  } else { let guard=0;
+    while(out.sites.length<N && guard++<N*50){
+      const i=out.sites.length+1, rl=rnd(), rw=rnd();
+      const u=m.strat?((i-1)+rl)*g.S:rl*g.U, p=mapU(g,u), offL=g.eJ+rw*p.lane.uw;
+      const site={no:i,rl,rw,u,lane:p.lane.id,laneName:p.lane.name,ch:p.ch,W:p.lane.w,Wn:p.lane.uw,offL,offD:p.lane.dOff+offL,stratum:m.strat?i:null};
+      if(!m.strat){ const dup=out.sites.find(s=>s.lane===site.lane&&Math.abs(s.ch-site.ch)<1&&Math.abs(s.offL-site.offL)<0.5);
+        if(dup){ out.log.push("Random pair r₁="+rl.toFixed(4)+", r_w="+rw.toFixed(4)+" fell on an earlier site and was discarded (WA 0.1 cl 4.3.1 note)."); continue; } }
+      out.sites.push(site); }
+    if(!m.strat) out.sites.sort((a,b)=>a.u-b.u).forEach((s,k)=>s.no=k+1);
+    if(m.strat) for(let k=1;k<=N;k++){ const a=mapU(g,(k-1)*g.S+1e-9), b=mapU(g,k*g.S-1e-9); out.strata.push({no:k,fromLane:a.lane.name,from:a.ch,toLane:b.lane.name,to:b.ch}); }
+    out.U=g.U; out.S=g.S; out.L=g.Ltot; out.A=g.Atot; }
+  if(j.subset.on){ const k=Math.max(1,Math.round(num(j.subset.k))||3); out.subset=[]; for(let a=1;a<=N;a+=k) out.subset.push(rndInt(a,Math.min(N,a+k-1))); out.subsetK=k; }
+  j.draws.push(out); j.field={};
+  return true;
+}
+// site position after any field relocation / measured width (AS 1289.1.4.1 cl 3.2(d)(iii))
+function eff(s,f,j=S){ const e=num(j.exclJoint)||0, mw=num(f.measW); let offL=s.offL;
+  if(isFinite(mw)) offL=e+s.rw*Math.max(0,mw-2*e);
+  let ch=s.ch, offD=offL+(s.offD-s.offL);
+  if(f.status==="moved"){ if(isFinite(num(f.mCh))) ch=toM(f.mCh,j); if(isFinite(num(f.mOff))){ offD=num(f.mOff); offL=offD-(s.offD-s.offL); } }
+  return {ch,offL,offD}; }
+
+/* ---------- schematic ---------- */
+function niceStep(range){ const raw=range/8, p=Math.pow(10,Math.floor(Math.log10(raw))); const n=raw/p; return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p; }
+function schematicSVG(j,g,d,compact){
+  if(!g||g.qty||!g.lanes.length) return "";
+  const W=1000, mL=150, mR=16, laneH=compact?40:54, gap=compact?6:10, top=compact?6:14;
+  const lo=Math.min(...g.lanes.map(L=>L.lo)), hi=Math.max(...g.lanes.map(L=>L.hi)), rng=hi-lo||1;
+  const x=c=>mL+(c-lo)/rng*(W-mL-mR), H=top+g.lanes.length*(laneH+gap)+(compact?24:34);
+  let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lot schematic"><defs><pattern id="hatch${compact?"c":""}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" class="ln" style="opacity:.25"/><line x1="0" y1="0" x2="0" y2="7" class="hl"/></pattern></defs>`;
+  const laneY={};
+  g.lanes.forEach((L,i)=>{ const y=top+i*(laneH+gap); laneY[L.id]=y;
+    s+=`<text x="8" y="${y+laneH/2-3}" class="lt">${esc(L.name.length>20?L.name.slice(0,19)+"…":L.name)}</text><text x="8" y="${y+laneH/2+11}" class="ltm">${L.w} m · ${L.dir>0?"→":"←"} ${fmtPos(L.a,j)}–${fmtPos(L.b,j)}</text>`;
+    s+=`<rect x="${x(L.lo)}" y="${y}" width="${x(L.hi)-x(L.lo)}" height="${laneH}" class="ln"/>`;
+    const jh=g.eJ/L.w*laneH; if(jh>0) s+=`<rect x="${x(L.lo)}" y="${y}" width="${x(L.hi)-x(L.lo)}" height="${jh}" class="jt"/><rect x="${x(L.lo)}" y="${y+laneH-jh}" width="${x(L.hi)-x(L.lo)}" height="${jh}" class="jt"/>`;
+    gaps(L).forEach(v=>{ s+=`<rect x="${x(v[0])}" y="${y}" width="${Math.max(1,x(v[1])-x(v[0]))}" height="${laneH}" fill="url(#hatch${compact?"c":""})"/>`; });
+  });
+  if(d&&d.strata&&d.strata.length>1){
+    for(let k=1;k<d.strata.length;k++){ const p=mapU(g,k*d.S); const y=laneY[p.lane.id]; if(y==null) continue; s+=`<line x1="${x(p.ch)}" y1="${y}" x2="${x(p.ch)}" y2="${y+laneH}" class="sl"/>`; }
+    d.strata.forEach(st=>{ const p=mapU(g,(st.no-1)*d.S+0.001); const y=laneY[p.lane.id]; if(y==null) return;
+      s+=`<text x="${x(p.ch)+(p.lane.dir>0?3:-3)}" y="${y+laneH-4}" class="slt" text-anchor="${p.lane.dir>0?"start":"end"}">SL${st.no}</text>`; });
+  }
+  if(d) d.sites.forEach(st=>{ const L=g.lanes.find(l=>l.id===st.lane); if(!L) return; const y=laneY[L.id];
+    const f=j.field[st.no]||{}, e=eff(st,f,j); const cls="st"+(f.status==="moved"?" mv":f.status==="done"?" dn":"");
+    const W2=isFinite(num(f.measW))?num(f.measW):L.w; const cy=y+Math.min(laneH-6,Math.max(6,e.offL/W2*laneH));
+    s+=`<circle cx="${x(e.ch)}" cy="${cy}" r="9" class="${cls}"/><text x="${x(e.ch)}" y="${cy}" class="stt${f.status==="done"?" dn":""}">${st.no}</text>`; });
+  const yb=top+g.lanes.length*(laneH+gap)+2, step=niceStep(rng);
+  s+=`<line x1="${x(lo)}" y1="${yb}" x2="${x(hi)}" y2="${yb}" class="tk"/>`;
+  for(let t=Math.ceil(lo/step)*step;t<=hi+1e-6;t+=step) s+=`<line x1="${x(t)}" y1="${yb}" x2="${x(t)}" y2="${yb+5}" class="tk"/><text x="${x(t)}" y="${yb+16}" class="tt">${j.delin==="slk"?(t/1000).toFixed(3):Math.round(t)}</text>`;
+  if(!compact) s+=`<text x="${W-mR}" y="${yb+30}" class="tt" text-anchor="end">${posLabel(j)} · datum at top edge of each lane · hatched = excluded · yellow = joint/edge strip</text>`;
+  return s+"</svg>";
+}
+
+/* ---------- plan overlay: chainage points tapped on the photo → position along the alignment ---------- */
+function calFn(j){
+  if(!j.photo||!j.cal) return null;
+  const pts=j.cal.pts.map(p=>({m:toM(p.ch,j),x:p.x,y:p.y})).filter(p=>isFinite(p.m)).sort((a,b)=>a.m-b.m);
+  const segs=[]; let tl=0, tm=0;
+  for(let i=0;i<pts.length-1;i++){ const a=pts[i], b=pts[i+1], dm=b.m-a.m, dx=b.x-a.x, dy=b.y-a.y, len=Math.hypot(dx,dy);
+    if(dm<=0.01||len<1) continue; segs.push({a,dm,ux:dx/len,uy:dy/len,k:len/dm}); tl+=len; tm+=dm; }
+  if(!segs.length) return null;
+  const K=tl/tm, side=num(j.cal.side)<0?-1:1, stretch=num(j.cal.stretch)||1, shift=num(j.cal.shift)||0;
+  const fn=(m,off)=>{ let s=segs[0]; for(const g of segs) if(m>=g.a.m) s=g;
+    const t=m-s.a.m, px=s.a.x+s.ux*t*s.k, py=s.a.y+s.uy*t*s.k, o=(off+shift)*K*stretch;
+    return [px-s.uy*side*o, py+s.ux*side*o]; };
+  fn.K=K; fn.ms=pts.map(p=>p.m); return fn;
+}
+function overlaySVG(j,opts={}){
+  const f=calFn(j); if(!f) return "";
+  const g=geometry(j); if(g.errs.length||g.qty) return "";
+  const d=curDraw(j), W=j.photoW, H=j.photoH, R=Math.max(W,H)/(opts.report?75:55);
+  const P=a=>a.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+  const band=(L,a,b,o1,o2)=>{ const n=Math.max(2,Math.ceil((b-a)/((L.hi-L.lo)/60))); const ms=[]; for(let i=0;i<=n;i++) ms.push(a+(b-a)*i/n); f.ms.forEach(m=>{ if(m>a&&m<b) ms.push(m); }); ms.sort((p,q)=>p-q);
+    return P(ms.map(m=>f(m,o1)).concat(ms.slice().reverse().map(m=>f(m,o2)))); };
+  let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="opacity:${num(j.cal.opacity)||0.85}"><defs><pattern id="ovh${opts.report?"r":""}" width="${R*0.7}" height="${R*0.7}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="${R*0.7}" stroke="#B42318" stroke-width="${R*0.18}"/></pattern></defs>`;
+  g.lanes.forEach(L=>{
+    s+=`<polygon points="${band(L,L.lo,L.hi,L.dOff,L.dOff+L.w)}" fill="#16B28B" fill-opacity=".22" stroke="#0C272E" stroke-width="2.5" vector-effect="non-scaling-stroke"/>`;
+    if(g.eJ>0){ s+=`<polygon points="${band(L,L.lo,L.hi,L.dOff,L.dOff+g.eJ)}" fill="#F2C230" fill-opacity=".5"/><polygon points="${band(L,L.lo,L.hi,L.dOff+L.w-g.eJ,L.dOff+L.w)}" fill="#F2C230" fill-opacity=".5"/>`; }
+    gaps(L).forEach(v=>{ s+=`<polygon points="${band(L,v[0],v[1],L.dOff,L.dOff+L.w)}" fill="url(#ovh${opts.report?"r":""})" stroke="#B42318" stroke-width="1.5" vector-effect="non-scaling-stroke"/>`; });
+  });
+  if(d&&d.strata&&d.strata.length>1) for(let k=1;k<d.strata.length;k++){ const p=mapU(g,k*d.S); const a=f(p.ch,p.lane.dOff), b=f(p.ch,p.lane.dOff+p.lane.w);
+    s+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#FFFFFF" stroke-width="2.5" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>`; }
+  if(d) d.sites.forEach(st=>{ const fl=j.field[st.no]||{}, e=eff(st,fl,j), p=f(e.ch,e.offD);
+    const fill=fl.status==="moved"?"#D99A06":fl.status==="done"?"#FFFFFF":"#16B28B", tc=fl.status==="done"?"#0C272E":"#FFFFFF";
+    s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${R}" fill="${fill}" stroke="${fl.status==="done"?"#16B28B":"#FFFFFF"}" stroke-width="${R*0.2}"/><text x="${p[0]}" y="${p[1]}" fill="${tc}" font-family="IBM Plex Mono,Menlo,monospace" font-weight="600" font-size="${R*1.05}" text-anchor="middle" dominant-baseline="central">${st.no}</text>`; });
+  return s+"</svg>";
+}
+function calMarksSVG(j){
+  if(!j.photo) return ""; const W=j.photoW, H=j.photoH, R=Math.max(W,H)/90;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${j.cal.pts.map((p,i)=>`<g><circle cx="${p.x}" cy="${p.y}" r="${R}" fill="none" stroke="#0C272E" stroke-width="${R*0.45}"/><circle cx="${p.x}" cy="${p.y}" r="${R}" fill="none" stroke="#FFFFFF" stroke-width="${R*0.2}"/><line x1="${p.x-R*1.8}" y1="${p.y}" x2="${p.x+R*1.8}" y2="${p.y}" stroke="#0C272E" stroke-width="${R*0.2}"/><line x1="${p.x}" y1="${p.y-R*1.8}" x2="${p.x}" y2="${p.y+R*1.8}" stroke="#0C272E" stroke-width="${R*0.2}"/>
+    <text x="${p.x+R*1.6}" y="${p.y-R*1.6}" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="${R*2.2}" fill="#0C272E" stroke="#FFFFFF" stroke-width="${R*0.5}" paint-order="stroke">P${i+1}${p.ch!==""?" · "+esc(p.ch):""}</text></g>`).join("")}</svg>`;
+}
+
+/* ---------- UI helpers ---------- */
+const $=s=>document.querySelector(s);
+let toastT; function toast(t){ const el=$("#toast"); el.textContent=t; el.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>el.hidden=true,3400); }
+const inp=(k,label,o={})=>{ const v=getP(S,k)??""; const id="i_"+k.replace(/\W/g,"_");
+  if(o.select) return `<label class="f" for="${id}">${label}<select id="${id}" data-k="${k}">${o.select.map(x=>{const [val,t]=Array.isArray(x)?x:[x,x];return `<option value="${esc(val)}"${String(v)===String(val)?" selected":""}>${esc(t)}</option>`}).join("")}</select></label>`;
+  if(o.area) return `<label class="f" for="${id}">${label}<textarea id="${id}" data-k="${k}">${esc(v)}</textarea></label>`;
+  return `<label class="f" for="${id}">${label}<input id="${id}" data-k="${k}" value="${esc(v)}" ${o.num?'type="text" inputmode="decimal" class="mono"':'type="'+(o.type||"text")+'"'} ${o.ph?`placeholder="${esc(o.ph)}"`:""}></label>`; };
+const slider=(k,label,min,max,stepv,fmt)=>{ const v=getP(S,k); return `<div class="slider"><div class="lab"><label for="r_${k.replace(/\W/g,"_")}">${label}</label><output id="o_${k.replace(/\W/g,"_")}">${fmt(num(v))}</output></div><input type="range" id="r_${k.replace(/\W/g,"_")}" data-k="${k}" data-fmt="${label}" min="${min}" max="${max}" step="${stepv}" value="${esc(v)}"></div>`; };
+const FMT={"cal.shift":v=>(v>0?"+":"")+v.toFixed(1)+" m","cal.stretch":v=>"× "+v.toFixed(1),"cal.opacity":v=>Math.round(v*100)+"%"};
+
+function progress(j){ const d=curDraw(j); if(!d) return {done:0,n:0}; return {done:d.sites.filter(s=>{const st=(j.field[s.no]||{}).status; return st==="done"||st==="moved"||st==="skip";}).length, n:d.sites.length}; }
+function renderSaved(){ const el=$("#savedTag"); if(!el) return;
+  el.className="saved"+(saveOk?"":" bad"); el.textContent=saveOk?(lastSaved?"Saved on this phone "+lastSaved.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}):"Saved on this phone"):"Not saved – export this lot"; }
+function renderHeader(){
+  $("#jobName").innerHTML=esc([S.job.lotNo||"No lot no.",S.job.project||S.job.client].filter(Boolean).join(" · "))+` · <span id="savedTag"></span>`; renderSaved();
+  $("#lotCount").textContent=Object.keys(jobs).length;
+  const idx=STEPS.findIndex(s=>s[0]===step);
+  $("#steps").innerHTML=STEPS.map(([k,t],i)=>`<button type="button" data-step="${k}" ${k===step?'aria-current="step"':""} class="${i<idx?"done":""}"><i>${i+1}</i>${t}</button>`).join("");
+  $("#btnBack").disabled=idx===0; $("#btnNext").textContent=idx===STEPS.length-1?"Start next lot":"Next: "+STEPS[idx+1][1];
+}
+function go(k){ step=k; armed=false; render(); window.scrollTo({top:0}); }
+
+/* ---------- steps ---------- */
+function vJob(){
+  return `<section class="card"><h2>Job details</h2>
+  <div class="grid two">${inp("job.client","Client")}${inp("job.project","Project")}${inp("job.location","Project location")}${inp("job.lotNo","Lot number")}
+  ${inp("job.ticket","Ticket no.")}${inp("job.clientRef","Client reference")}${inp("job.date","Date",{type:"date"})}${inp("job.tech","Technician")}
+  ${inp("job.material","Material / layer",{ph:"e.g. AC14 wearing course, 40 mm"})}${inp("job.testType","Test",{select:TEST_TYPES})}</div></section>
+  <section class="card"><h2>Method</h2><p class="hint">Use the standard named in the contract specification.</p>
+  <div class="methods">${Object.entries(METHODS).map(([k,m])=>`<label class="method"><input type="radio" name="method" data-k="method" value="${k}" ${S.method===k?"checked":""}><b>${m.title}</b><span>${m.sub}</span></label>`).join("")}</div>
+  <p class="hint" id="methodNote">${METHODS[S.method].note}</p>
+  <div class="row"><span class="hint" style="font-weight:600">Select sites by</span>
+  <div class="seg"><label><input type="radio" name="basis" data-k="basis" value="area" ${S.basis==="area"?"checked":""}>Location (cores, in situ)</label><label><input type="radio" name="basis" data-k="basis" value="qty" ${S.basis==="qty"?"checked":""}>Time / tonnage / volume</label></div></div></section>`;
+}
+function laneCard(ln,i){
+  return `<div class="lane"><header><b>${i+1}.</b><input data-k="lanes.${i}.name" value="${esc(ln.name)}" aria-label="Lane name" placeholder="Paver run ${i+1}"><button class="btn small ghost" data-act="delLane" data-i="${i}" type="button" ${S.lanes.length<2?"disabled":""}>Remove</button></header>
+  <div class="grid">${inp(`lanes.${i}.start`,"Start "+posLabel(),{num:1})}${inp(`lanes.${i}.end`,"End "+posLabel(),{num:1})}${inp(`lanes.${i}.width`,"Width (m)",{num:1})}${inp(`lanes.${i}.dOff`,"Near edge from datum (m)",{num:1})}</div></div>`;
+}
+function exclCard(x,i){
+  return `<div class="excl"><div class="grid">${inp(`exclusions.${i}.from`,"From "+posLabel(),{num:1})}${inp(`exclusions.${i}.to`,"To "+posLabel(),{num:1})}
+  ${inp(`exclusions.${i}.lane`,"Applies to",{select:[["all","All lanes"],...S.lanes.map((l,k)=>[l.id,l.name||"Lane "+(k+1)])]})}${inp(`exclusions.${i}.reason`,"Reason",{ph:"Bridge, intersection, pit…"})}</div>
+  <div class="row end"><button class="btn small ghost" data-act="delExcl" data-i="${i}" type="button">Remove zone</button></div></div>`;
+}
+function vLot(){
+  const m=METHODS[S.method];
+  if(S.basis==="qty") return `<section class="card"><h2>Production lot</h2><p class="hint">${m.std} ${m.clauseQty}. Sampling assumes production continues at an even rate over the lot.</p>
+   <div class="grid">${inp("qty.kind","Basis",{select:["Tonnage","Time","Volume"]})}${inp("qty.unit","Unit",{ph:"t, min, m³"})}${inp("qty.total","Total for the lot",{num:1})}${inp("n","Number of samples",{num:1})}
+   ${S.qty.kind==="Time"?inp("qty.startClock","Production start (clock)",{type:"time"}):""}</div><div id="lotSummary"></div></section>`;
+  return `<section class="card"><h2>Lot layout</h2>
+  <p class="hint">Enter each lane or paver run in the order it was laid. On curves, measure along the chainage or SLK of the alignment and take offsets square to it (WA 0.1 allows the grid to follow curves).</p>
+  <div class="grid">${inp("delin","Measure along",{select:[["ch","Chainage (m)"],["slk","SLK (km)"]]})}${inp("n","Number of sites (N)",{num:1})}
+  ${inp("exclJoint","Keep clear of longitudinal joints & edges (m)",{num:1})}${inp("exclEnd","Keep clear of transverse joints & ends (m)",{num:1})}</div>
+  ${inp("datum","Offset datum",{ph:"e.g. LHS edge of seal, looking up-chainage"})}
+  <div style="display:grid;gap:10px">${S.lanes.map(laneCard).join("")}</div>
+  <div class="row"><button class="btn" data-act="addLane" type="button">Add lane / paver run</button></div></section>
+  <section class="card"><h2>Excluded zones</h2><p class="hint">Areas inside the lot that cannot be tested: bridge decks, intersections, pits, hand-work. The transverse clearance is applied around each zone too.</p>
+  <div style="display:grid;gap:10px">${S.exclusions.map(exclCard).join("")||'<p class="hint">No excluded zones.</p>'}</div>
+  <div class="row"><button class="btn" data-act="addExcl" type="button">Add excluded zone</button></div></section>
+  <section class="card"><h2>Check the lot</h2><div id="lotSummary"></div></section>`;
+}
+function lotSummaryHTML(){
+  const g=geometry(), m=METHODS[S.method]; let h="";
+  if(g.errs.length) h+=`<div class="msg bad">${g.errs.map(esc).join("<br>")}</div>`;
+  if(g.warns.length) h+=`<div class="msg warn">${g.warns.map(esc).join("<br>")}</div>`;
+  if(g.errs.length) return h;
+  if(g.qty) return h+`<div class="stats"><div><span>Total</span><b>${num(S.qty.total)} ${esc(S.qty.unit)}</b></div><div><span>Samples</span><b>${g.N}</b></div>${m.strat?`<div><span>Stratum size</span><b>${f2(g.S)} ${esc(S.qty.unit)}</b></div>`:""}</div>`;
+  return h+`<div class="stats"><div><span>Testable length L</span><b>${f1(g.Ltot)} m</b></div><div><span>Testable area</span><b>${Math.round(g.Atot).toLocaleString()} m²</b></div><div><span>Sites N</span><b>${g.N}</b></div>
+  ${m.strat?`<div><span>${m.weight==="area"?"Sub-lot area":"Stratum S = L/N"}</span><b>${m.weight==="area"?Math.round(g.S)+" m²":f1(g.S)+" m"}</b></div>`:""}</div><div class="schem">${schematicSVG(S,g,null)}</div>`;
+}
+function vDraw(){
+  const m=METHODS[S.method], g=geometry(), d=curDraw();
+  const stale=d&&(d.method!==S.method||d.basis!==S.basis||d.N!==g.N);
+  let h=`<section class="card"><div class="row"><div style="flex:1;min-width:200px"><h2>${m.title}</h2><p class="hint">${S.basis==="qty"?m.clauseQty:m.clauseArea}</p></div>
+   <button class="btn primary" data-act="draw" type="button" ${g.errs.length?"disabled":""}>${d?"Redraw sites":"Draw "+(isFinite(g.N)?g.N:"")+" random sites"}</button></div>
+   ${g.errs.length?`<div class="msg bad">Fix the lot details first:<br>${g.errs.map(esc).join("<br>")}</div>`:""}
+   ${stale?`<div class="msg warn">The method or lot changed after this draw. Redraw so the sites match what will be reported.</div>`:""}
+   <div id="redrawBox"></div>
+   <label class="check"><input type="checkbox" data-k="subset.on" ${S.subset.on?"checked":""}><span>Also pick a random subset for extra testing</span></label>
+   ${S.subset.on?`<div class="grid">${inp("subset.label","Subset is for",{ph:"MDD / lab sample"})}${inp("subset.k","One site from every",{num:1})}</div><p class="hint">One site is picked at random from each group of consecutive sites, as in your MDD worksheet. Takes effect on the next draw.</p>`:""}
+  </section>`;
+  if(!d) return h+`<section class="card sunk"><p class="hint">No sites drawn yet. Random numbers come from the device's cryptographic generator (WA 0.1 cl 4.3.2, AS 1289 cl 3.1(b)). Every draw, including redraws, is recorded on the report.</p></section>`;
+  h+=`<section class="card"><div class="row"><h2 style="flex:1">Sites</h2><span class="pill mut">Draw ${S.draws.length} · ${new Date(d.at).toLocaleString()}</span></div>`;
+  if(d.log.length) h+=`<div class="msg warn">${d.log.map(esc).join("<br>")}</div>`;
+  h+=sitesTableApp(d);
+  if(d.subset) h+=`<p><b>${esc(S.subset.label)}:</b> sites ${d.subset.join(", ")}</p>`;
+  if(d.basis==="area") h+=`<div class="schem">${schematicSVG(S,geometry(),d)}</div>`;
+  return h+"</section>";
+}
+function clock(start,val,unit){ const [h,mn]=start.split(":").map(Number); let mins=val; if(/^h/i.test(unit)) mins=val*60; const t=h*60+mn+Math.round(mins); return String(Math.floor(t/60)%24).padStart(2,"0")+":"+String(t%60).padStart(2,"0"); }
+function sitesTableApp(d){
+  const sub=s=>d.subset&&d.subset.includes(s.no)?' <span class="pill acc">'+esc(S.subset.label)+'</span>':"";
+  if(d.basis==="qty") return `<div class="tbl"><table><thead><tr><th>Sample</th><th>Random r</th><th>Take at (${esc(S.qty.unit)})</th>${S.qty.kind==="Time"&&S.qty.startClock?"<th>Clock</th>":""}</tr></thead><tbody>
+    ${d.sites.map(s=>`<tr><td>${s.no}${sub(s)}</td><td class="n">${s.r.toFixed(4)}</td><td class="n">${f2(s.val)}</td>${S.qty.kind==="Time"&&S.qty.startClock?`<td class="n">${clock(S.qty.startClock,s.val,S.qty.unit)}</td>`:""}</tr>`).join("")}</tbody></table></div>`;
+  return `<div class="tbl"><table><thead><tr><th>Site</th><th>Lane</th><th>${posLabel()}</th><th>From datum (m)</th><th>From lane edge (m)</th><th>r₁</th><th>r_w</th></tr></thead><tbody>
+  ${d.sites.map(s=>`<tr><td>${s.no}${sub(s)}</td><td>${esc(s.laneName)}</td><td class="n"><b>${fmtPos(s.ch)}</b></td><td class="n"><b>${f2(s.offD)}</b></td><td class="n">${f2(s.offL)}</td><td class="n">${s.rl.toFixed(4)}</td><td class="n">${s.rw.toFixed(4)}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+function vMap(){
+  const d=curDraw();
+  let h=`<section class="card"><h2>Site plan overlay</h2>
+  <p class="hint">Photograph the supplied drawing. Then tap at least two spots along one line on the drawing where you can read the chainage, such as the chainage ticks on the set-out line, and type each chainage in. The lot, excluded zones and numbered sites are drawn over the drawing. Add more points on curves so the lot follows the bend.</p>
+  <div class="row"><button class="btn ${S.photo?"":"primary"}" data-act="cam" type="button">Take photo</button><button class="btn" data-act="pick" type="button">Choose image</button>${S.photo?'<button class="btn ghost" data-act="clearPhoto" type="button">Remove photo</button>':""}</div>`;
+  if(!S.photo) return h+`<div class="drop"><b>No drawing yet</b><span>The overlay is optional. The report always includes the schematic.</span></div></section>`;
+  if(S.basis==="qty") return h+`<div class="mapscroll"><div class="mapinner"><img src="${S.photo}" alt="Site plan"></div></div></section>`;
+  const f=calFn(S), n=S.cal.pts.filter(p=>isFinite(num(p.ch))).length;
+  h+=`<div class="row"><button class="btn small" data-act="arm" aria-pressed="${armed}" type="button">${armed?"Tap the drawing…":"Add chainage point"}</button><span style="flex:1"></span>
+    <button class="btn small" data-act="zoom" data-z="-1" type="button" aria-label="Zoom out">−</button><span class="mono" style="min-width:48px;text-align:center">${Math.round(zoom*100)}%</span><button class="btn small" data-act="zoom" data-z="1" type="button" aria-label="Zoom in">+</button></div>
+  ${!f?`<div class="msg ${n?"warn":"ok"}">${n===1?"Add one more chainage point to place the lot.":n>=2?"The two chainage points need different chainages.":"Tap “Add chainage point”, then tap the drawing where you can read a chainage."}</div>`:""}
+  ${f&&!d?`<div class="msg warn">Draw the sites to see them on the drawing.</div>`:""}
+  <div class="mapscroll" id="mapscroll"><div class="mapinner ${armed?"armed":""}" id="mapinner" style="--z:${zoom}"><img src="${S.photo}" alt="Site plan" draggable="false"><div id="ovLayer">${overlaySVG(S)}</div><div id="calLayer">${calMarksSVG(S)}</div></div></div>
+  <div class="ptlist">${S.cal.pts.map((p,i)=>`<div class="pt"><b>P${i+1}</b><input data-k="cal.pts.${i}.ch" value="${esc(p.ch)}" inputmode="decimal" class="mono" placeholder="${posLabel()} at this point" aria-label="${posLabel()} at point ${i+1}" id="pt_${p.id}"><button class="btn small ghost" data-act="delPt" data-i="${i}" type="button">Remove</button></div>`).join("")}</div>`;
+  if(f) h+=`<h3>Line it up</h3><div class="grid tight">
+    ${slider("cal.shift","Datum from tapped line",-30,30,0.1,FMT["cal.shift"])}
+    ${slider("cal.stretch","Width scale",0.5,6,0.1,FMT["cal.stretch"])}
+    ${slider("cal.opacity","Overlay strength",0.3,1,0.05,FMT["cal.opacity"])}</div>
+    <div class="row"><span class="hint" style="font-weight:600">Offsets go</span><div class="seg"><label><input type="radio" name="side" data-k="cal.side" value="1" ${S.cal.side!=="-1"?"checked":""}>Right of travel</label><label><input type="radio" name="side" data-k="cal.side" value="-1" ${S.cal.side==="-1"?"checked":""}>Left of travel</label></div></div>
+    <p class="hint">Travel is the direction of increasing chainage. Set the datum distance if the line you tapped is not the datum (${esc(S.datum)}). Width scale is for drawings with exaggerated lane widths; leave it at × 1.0 for aerials and scaled plans.</p>`;
+  return h+"</section>";
+}
+function refreshOverlay(){ const o=$("#ovLayer"), c=$("#calLayer"); if(o) o.innerHTML=overlaySVG(S); if(c) c.innerHTML=calMarksSVG(S); }
+
+function vField(){
+  const d=curDraw();
+  if(!d) return `<section class="card"><h2>On site</h2><p class="hint">Draw the sites first.</p></section>`;
+  const pr=progress(S), all=pr.done===pr.n;
+  const finish=all?`<section class="card sunk"><div class="msg ok"><b>All ${pr.n} ${d.basis==="qty"?"samples":"sites"} recorded for lot ${esc(S.job.lotNo||"")}.</b><span>This lot is saved on the phone. Check the report, then start the next lot.</span></div><div class="row"><button class="btn" data-act="toReport" type="button">Check report</button><button class="btn primary" data-act="nextLot" type="button">Start next lot</button></div></section>`:"";
+  if(d.basis==="qty") return `<section class="card"><div class="row"><h2 style="flex:1">On site</h2><span class="pill ${all?"ok":"mut"}">${pr.done} / ${pr.n} taken</span></div><p class="hint">Take each sample at the ${esc(S.qty.kind.toLowerCase())} shown.</p><div class="sites">${d.sites.map(s=>{const f=S.field[s.no]||{};
+    return `<div class="site ${f.status==="done"?"done":""}"><div class="hd"><span class="dot">${s.no}</span><b style="flex:1;font:500 1.3rem var(--f-mono)">${f2(s.val)} ${esc(S.qty.unit)}${S.qty.kind==="Time"&&S.qty.startClock?" · "+clock(S.qty.startClock,s.val,S.qty.unit):""}</b></div>
+    <div class="row"><button class="btn small ${f.status==="done"?"dark":""}" data-act="st" data-no="${s.no}" data-v="done" type="button">${f.status==="done"?"Taken ✓":"Mark taken"}</button><button class="btn small ${f.status==="skip"?"dark":""}" data-act="st" data-no="${s.no}" data-v="skip" type="button">Not taken</button></div></div>`}).join("")}</div></section>${finish}`;
+  return `<section class="card"><div class="row"><h2 style="flex:1">On site</h2><span class="pill ${all?"ok":"mut"}">${pr.done} / ${pr.n} done</span></div>
+  <p class="hint">Set out each site by tape or wheel to within 0.5 m (WA 0.1 cl 4.2.1(h)). Offsets are from the datum: ${esc(S.datum)}. If a site lands on a joint, pit or obstruction, move it to the nearest testable spot and record why (WA 0.1 note 4.1.1(f)).</p></section>
+  <div class="sites">${d.sites.map(s=>siteCard(s,d)).join("")}</div>${finish}`;
+}
+function siteCard(s,d){
+  const f=S.field[s.no]||{}, e=eff(s,f), cls=f.status==="done"?"done":f.status==="moved"?"moved":"";
+  return `<div class="site ${cls}"><div class="hd"><span class="dot">${s.no}</span><div style="flex:1;min-width:0"><b>${esc(s.laneName)}</b>${d.subset&&d.subset.includes(s.no)?' <span class="pill acc">'+esc(S.subset.label)+'</span>':""}<div class="hint">${s.stratum?"Sub-lot "+s.stratum+" · ":""}${f2(e.offL)} m from lane edge</div></div></div>
+  <div class="loc"><div><span>${posLabel()}</span><b>${fmtPos(s.ch)}</b></div><div><span>Offset from datum</span><b>${f2(isFinite(num(f.measW))?e.offD:s.offD)} m</b></div></div>
+  <div class="row"><button class="btn small ${f.status==="done"?"dark":""}" data-act="st" data-no="${s.no}" data-v="done" type="button">${f.status==="done"?"Tested ✓":"Mark tested"}</button><button class="btn small ${f.status==="moved"?"dark":""}" data-act="st" data-no="${s.no}" data-v="moved" type="button">Relocated</button><button class="btn small ${f.status==="skip"?"dark":""}" data-act="st" data-no="${s.no}" data-v="skip" type="button">Not tested</button></div>
+  ${f.status==="moved"?`<div class="grid">${inp(`field.${s.no}.mCh`,"Actual "+posLabel(),{num:1})}${inp(`field.${s.no}.mOff`,"Actual offset from datum (m)",{num:1})}</div>${inp(`field.${s.no}.reason`,"Reason",{select:["","On longitudinal joint","On transverse joint","Service pit / structure","Lot boundary (WA 0.1 note 4.1.1(f))","Obstruction / traffic","Other"]})}`:""}
+  ${f.status==="skip"?inp(`field.${s.no}.reason`,"Reason not tested"):""}
+  <details ${isFinite(num(f.measW))||f.note?"open":""}><summary>Measured width / notes</summary>${inp(`field.${s.no}.measW`,"Lane width measured here (m)",{num:1})}<p class="hint">AS 1289.1.4.1 cl 3.2(d)(iii): offset is recalculated as clearance + r_w × measured testable width.</p>${inp(`field.${s.no}.note`,"Note")}</details></div>`;
+}
+
+/* ---------- report: one A4 landscape page + plan page ---------- */
+const REPORT_CSS=`@page{size:A4 landscape;margin:9mm}
+.rp{font:12px/1.35 Barlow,system-ui,sans-serif;color:#0C272E;background:#fff;padding:18px;max-width:1080px;margin:0 auto;display:grid;gap:8px}
+.rp+.rp{break-before:page;border-top:6px solid #EDF2F1}
+.rp .rh{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border-bottom:3px solid #16B28B;padding-bottom:6px}
+.rp .rh img{height:46px;width:auto}
+.rp h1{font:700 17px Montserrat,"Segoe UI",sans-serif;margin:0}
+.rp .rh p{margin:0;color:#526B6E}
+.rp .lot{text-align:right;font-size:12px}.rp .lot b{display:block;font:700 15px Montserrat,"Segoe UI",sans-serif}
+.rp .info{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid #C9D6D4;border-radius:4px;overflow:hidden}
+.rp .info div{padding:3px 7px;border-right:1px solid #E2EAE8;border-bottom:1px solid #E2EAE8;min-width:0}
+.rp .info span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#526B6E;font-weight:600}
+.rp .info b{font-weight:600;overflow-wrap:anywhere}
+.rp .line{margin:0;font-size:11.5px}.rp .line b{color:#0B7F62}
+.rp svg{width:100%;height:auto;display:block}
+.rp .sch{border:1px solid #C9D6D4;border-radius:4px;background:#F4F7F6}
+.rp .tbl{overflow-x:auto}
+.rp table{border-collapse:collapse;width:100%;font-size:11px}
+.rp th,.rp td{border:1px solid #C9D6D4;padding:2px 5px;text-align:left;white-space:nowrap}
+.rp th{background:#0C272E;color:#fff;font-weight:600;font-size:10px}
+.rp td.n{text-align:right;font-family:"IBM Plex Mono",Menlo,monospace}
+.rp td.w{white-space:normal}
+.rp tr:nth-child(even) td{background:#F4F7F6}
+.rp .pill{display:inline-block;font-size:9px;font-weight:600;padding:0 5px;border-radius:8px;text-transform:uppercase}
+.rp .pill.ok{background:#DDF4EC;color:#0B7F62}.rp .pill.warn{background:#FBF1D9;color:#A16207}.rp .pill.mut{background:#EDF2F1;color:#526B6E}.rp .pill.acc{background:#0C272E;color:#fff}
+.rp .fn{font-size:10px;color:#526B6E;margin:0}
+.rp .sig{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:10px;font-size:11px}
+.rp .sig div{border-top:1px solid #0C272E;padding-top:3px;color:#526B6E}
+.rp .planwrap{text-align:center}.rp .plan{position:relative;display:inline-block;border:1px solid #C9D6D4;max-width:100%;vertical-align:top}.rp .plan img{display:block;max-width:100%;max-height:150mm;width:auto;height:auto}.rp .plan svg{position:absolute;inset:0;width:100%;height:100%}
+@media screen{.rp .plan img{max-height:80vh}}
+.rp .pg2{break-before:page}
+.rp .key{display:flex;gap:14px;flex-wrap:wrap;font-size:10.5px;color:#526B6E}.rp .key i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:4px}
+.rp .sch .ln{fill:#3A4246}.rp .sch .jt{fill:#F2C230;opacity:.45}.rp .sch .hl{stroke:#97A6A8}.rp .sch .sl{stroke:#fff;stroke-opacity:.8;stroke-width:1.4;stroke-dasharray:4 4}
+.rp .sch .st{fill:#16B28B;stroke:#fff;stroke-width:1.5}.rp .sch .st.mv{fill:#D99A06}.rp .sch .st.dn{fill:#fff;stroke:#16B28B;stroke-width:2.5}
+.rp .sch .stt{fill:#fff;font:600 10px "IBM Plex Mono",monospace;text-anchor:middle;dominant-baseline:central}.rp .sch .stt.dn{fill:#0C272E}
+.rp .sch .tk{stroke:#526B6E}.rp .sch .tt{fill:#526B6E;font:10px "IBM Plex Mono",monospace;text-anchor:middle}.rp .sch .lt{fill:#0C272E;font:600 12px Barlow,sans-serif}.rp .sch .ltm{fill:#526B6E;font:10px "IBM Plex Mono",monospace}.rp .sch .slt{fill:#fff;fill-opacity:.7;font:600 9px "IBM Plex Mono",monospace}
+@media (max-width:700px){.rp{padding:12px}.rp .info{grid-template-columns:repeat(2,minmax(0,1fr))}.rp .rh{grid-template-columns:auto 1fr}.rp .lot{grid-column:1/-1;text-align:left}.rp .lot b{display:inline;margin-right:8px}.rp .sig{grid-template-columns:1fr}}
+@media print{.rp{padding:0;max-width:none}.rp+.rp{border-top:0}.rp table,.rp .sch,.rp .plan{break-inside:avoid}}`;
+function reportHTML(j){ return withJob(j,()=>{
+  const m=METHODS[j.method], d=curDraw(j), g=geometry(j), J=j.job;
+  const iv=(a,b)=>`<div><span>${a}</span><b>${esc(b)||"–"}</b></div>`;
+  const sub=s=>d&&d.subset&&d.subset.includes(s.no)?' <span class="pill acc">'+esc(j.subset.label)+'</span>':"";
+  let h=`<section class="rp"><div class="rh"><img src="${LOGO}" alt="New World Laboratories"><div><h1>Random Sample Site Location</h1><p>${m.std} ${esc(j.basis==="qty"?m.clauseQty:m.clauseArea)} · ${m.strat?"stratified":"unstratified"} random</p></div><div class="lot"><b>Lot ${esc(J.lotNo||"–")}</b>${esc(J.date)}${J.ticket?" · "+esc(J.ticket):""}</div></div>
+  <div class="info">${iv("Client",J.client)}${iv("Project",J.project)}${iv("Location",J.location)}${iv("Client ref",J.clientRef)}${iv("Material / layer",J.material)}${iv("Test",J.testType)}${iv("Technician",J.tech)}${iv(j.basis==="qty"?"Samples":"Sites N",d?d.N:j.n)}</div>`;
+  if(j.basis==="qty"){
+    h+=`<p class="line"><b>Lot:</b> ${esc(j.qty.kind)} basis, total ${num(j.qty.total)} ${esc(j.qty.unit)}${m.strat?", stratum size "+f2(g.S)+" "+esc(j.qty.unit):""}${j.qty.startClock?", production start "+esc(j.qty.startClock):""}.</p>`;
+    if(d) h+=`<div class="tbl"><table><thead><tr><th>Sample</th>${m.strat?"<th>Stratum ("+esc(j.qty.unit)+")</th>":""}<th>Random r</th><th>Take at (${esc(j.qty.unit)})</th>${j.qty.kind==="Time"&&j.qty.startClock?"<th>Clock</th>":""}<th>Result</th></tr></thead><tbody>${d.sites.map(s=>{const f=j.field[s.no]||{};
+      return `<tr><td>${s.no}${sub(s)}</td>${m.strat?`<td class="n">${f2(s.s0)}–${f2(s.s1)}</td>`:""}<td class="n">${s.r.toFixed(4)}</td><td class="n">${f2(s.val)}</td>${j.qty.kind==="Time"&&j.qty.startClock?`<td class="n">${clock(j.qty.startClock,s.val,j.qty.unit)}</td>`:""}<td class="w">${f.status==="done"?'<span class="pill ok">Taken</span>':f.status==="skip"?'<span class="pill mut">Not taken</span> '+esc(f.reason||""):""}</td></tr>`}).join("")}</tbody></table></div>`;
+  } else {
+    const lanes=(g.lanes||[]).map(L=>`${esc(L.name)} ${fmtPos(L.a)}→${fmtPos(L.b)}, ${f2(L.w)} m wide (Wₙ ${f2(L.uw)}), near edge ${f2(L.dOff)} m from datum`).join("; ");
+    const ex=j.exclusions.length?j.exclusions.map(x=>`${esc(x.from)}–${esc(x.to)} ${x.lane==="all"?"all lanes":esc((j.lanes.find(l=>l.id===x.lane)||{}).name||"")} (${esc(x.reason||"excluded")})`).join("; "):"none";
+    h+=`<p class="line"><b>Lot:</b> measured along ${posLabel().toLowerCase()}; offsets from ${esc(j.datum)}. Clear ${num(j.exclJoint)||0} m of longitudinal joints and edges, ${num(j.exclEnd)||0} m of transverse joints, lot ends and excluded zones.${g.errs.length?"":` Testable L = ${f1(g.Ltot)} m, area ${Math.round(g.Atot).toLocaleString()} m²${m.strat?(m.weight==="area"?", sub-lot area "+Math.round(g.S)+" m²":", stratum S = L/N = "+f1(g.S)+" m"):""}.`}</p>
+    <p class="line"><b>Lanes:</b> ${lanes||"–"}. <b>Excluded zones:</b> ${ex}.</p>`;
+    if(d&&!g.errs.length) h+=`<div class="sch">${schematicSVG(j,g,d,true)}</div>`;
+    if(d) h+=`<div class="tbl"><table><thead><tr><th>Site</th>${m.strat?"<th>Sub-lot</th>":""}<th>Lane</th><th>r₁</th><th>${posLabel()}</th><th>r_w</th><th>Wₙ (m)</th><th>From lane edge (m)</th><th>From datum (m)</th><th>On site</th></tr></thead><tbody>
+    ${d.sites.map(s=>{ const f=j.field[s.no]||{}, e=eff(s,f,j); let st="";
+      if(f.status==="done") st='<span class="pill ok">Tested</span>'; else if(f.status==="moved") st=`<span class="pill warn">Moved</span> to ${fmtPos(e.ch)} / ${f2(e.offD)} m – ${esc(f.reason||"no reason given")}`; else if(f.status==="skip") st=`<span class="pill mut">Not tested</span> ${esc(f.reason||"")}`;
+      if(isFinite(num(f.measW))) st+=` W measured ${num(f.measW)} m → ${f2(e.offL)} m from edge`; if(f.note) st+=" "+esc(f.note);
+      return `<tr><td>${s.no}${sub(s)}</td>${m.strat?`<td class="n">${s.stratum}</td>`:""}<td>${esc(s.laneName)}</td><td class="n">${s.rl.toFixed(4)}</td><td class="n"><b>${fmtPos(s.ch)}</b></td><td class="n">${s.rw.toFixed(4)}</td><td class="n">${f2(s.Wn)}</td><td class="n">${f2(s.offL)}</td><td class="n"><b>${f2(s.offD)}</b></td><td class="w">${st}</td></tr>`; }).join("")}</tbody></table></div>`;
+  }
+  if(d){ const prev=j.draws.slice(0,-1);
+    h+=`<p class="fn">Random numbers: electronic generator (browser cryptographic RNG, unseeded so it differs every draw), 4 d.p., WA 0.1 cl 4.3.2 / AS 1289 cl 3.1(b). ${j.basis==="area"?"Lateral offset = clearance + r_w × Wₙ from the lane's near edge. "+(m.strat?"Sub-lots run on from one paver run into the next (SL boundaries dashed on the schematic). ":"")+"Sites set out by measurement to within 0.5 m. ":""}${d.subset?esc(j.subset.label)+": one random site from each group of "+d.subsetK+" (sites "+d.subset.join(", ")+"). ":""}${d.log.map(esc).join(" ")}
+    Draw ${j.draws.length} of ${j.draws.length}, ${new Date(d.at).toLocaleString()}${prev.length?"; earlier draws superseded: "+prev.map((x,i)=>"draw "+(i+1)+" ("+esc(j.draws[i+1].reason||"no reason")+")").join(", "):""}.${J.notes?" Notes: "+esc(J.notes):""}</p>`; }
+  else h+=`<p class="fn">No sites drawn.</p>`;
+  h+=`<div class="sig"><div>Technician: ${esc(J.tech)}</div><div>Checked by</div><div>Date</div></div>`;
+  if(j.photo){ const ov=j.basis==="area"?overlaySVG(j,{report:true}):"";
+    h+=`<div class="pg2"></div><div class="rh"><img src="${LOGO}" alt=""><div><h1>Site plan${ov?" with drawn lot":""}</h1><p>Lot ${esc(J.lotNo||"–")} · ${esc(J.project||J.client||"")}</p></div><div class="lot">${esc(J.date)}</div></div>
+    <div class="planwrap"><div class="plan"><img src="${j.photo}" alt="Supplied site plan">${ov}</div></div>
+    ${ov?`<div class="key"><span><i style="background:#16B28B"></i>Site to test</span><span><i style="background:#fff;box-shadow:inset 0 0 0 2px #16B28B"></i>Tested</span><span><i style="background:#D99A06"></i>Relocated</span><span><i style="background:#F2C230"></i>Joint / edge clearance</span><span><i style="background:#B42318"></i>Excluded</span><span>Overlay placed from ${j.cal.pts.filter(p=>isFinite(num(p.ch))).length} chainage points read off the drawing; positions are indicative, sites are set out by measurement.</span></div>`:""}`; }
+  h+=`<p class="fn">Records per ${m.std}${m.std==="WA 0.1"?"":" cl 4 and 5"}. Generated ${new Date().toLocaleString()} · New World Laboratories Random Site Locator v${APP_VERSION}.</p></section>`;
+  return h; }); }
+function reportDoc(list){ return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(list.length>1?"Random sites – "+list.length+" lots":fileBase(list[0]))}</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Barlow:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap"><style>body{margin:0;background:#fff}${REPORT_CSS}</style></head><body>${list.map(reportHTML).join("")}</body></html>`; }
+function vReport(){
+  const self=!window.claude, pr=progress(S);
+  return `<div class="rpbar noprint">${self?'<button class="btn small primary" data-act="print" type="button">Print / PDF</button>':""}<button class="btn small ${self?"":"primary"}" data-act="saveReport" type="button">Save report</button><button class="btn small" data-act="csv" type="button">Sites .csv</button><button class="btn small" data-act="exportJob" type="button">Lot file</button><button class="btn small" data-act="nextLot" type="button">Next lot</button></div>
+  ${pr.n&&pr.done<pr.n?`<div class="msg warn">${pr.n-pr.done} of ${pr.n} sites have no on-site result yet.</div>`:""}
+  <div class="report-host" id="rpHost"></div>
+  <section class="card">${inp("job.notes","Report notes",{area:1})}<p class="hint">The saved report is a web page that opens on any phone or PC and prints from the browser as one A4 landscape page, plus a page for the site plan when there is one. At the lab, open Lots to save all of today's reports in one file.</p></section>`;
+}
+function fillReport(){ const host=$("#rpHost"); if(!host) return; const sh=host.shadowRoot||host.attachShadow({mode:"open"}); sh.innerHTML=`<style>${REPORT_CSS}</style>`+reportHTML(S); }
+
+/* ---------- render ---------- */
+function render(){
+  renderHeader();
+  $("#main").innerHTML={job:vJob,lot:vLot,draw:vDraw,map:vMap,field:vField,report:vReport}[step]();
+  if(step==="lot") refreshLot();
+  if(step==="report") fillReport();
+}
+function refreshLot(){ const el=$("#lotSummary"); if(el) el.innerHTML=lotSummaryHTML(); }
+
+/* ---------- next lot ---------- */
+function nextLot(){
+  flush(); const p=S, nj=blankJob();
+  ["client","project","location","ticket","clientRef","date","tech","material","testType"].forEach(k=>nj.job[k]=p.job[k]);
+  ["method","basis","delin","datum","exclJoint","exclEnd","n"].forEach(k=>nj[k]=p[k]);
+  nj.subset=JSON.parse(JSON.stringify(p.subset)); nj.qty={...p.qty,total:""};
+  nj.lanes=p.lanes.map(l=>({id:uid(),name:l.name,start:"",end:"",width:l.width,dOff:l.dOff}));
+  if(p.photo){ nj.photo=p.photo; nj.photoW=p.photoW; nj.photoH=p.photoH; nj.cal=JSON.parse(JSON.stringify(p.cal)); }
+  S=nj; jobs[S.id]=S; persist(S); closeSheet(); go("job");
+  toast("Lot "+(p.job.lotNo||"")+" saved. New lot started with the same job details.");
+  setTimeout(()=>{ const el=$("#i_job_lotNo"); if(el) el.focus(); },50);
+}
+
+/* ---------- events ---------- */
+document.addEventListener("input",e=>{ const k=e.target.dataset.k; if(!k) return;
+  const v=e.target.type==="checkbox"?e.target.checked:e.target.value;
+  if(k.startsWith("field.")){ const no=k.split(".")[1]; S.field[no]=S.field[no]||{}; }
+  setP(S,k,v); save();
+  if(k.startsWith("job.")) renderHeader();
+  if(step==="lot"){ refreshLot(); if(k==="delin"||k==="qty.kind") render(); }
+  if(k==="method"||k==="basis"){ const n=$("#methodNote"); if(n) n.textContent=METHODS[S.method].note; }
+  if(k==="subset.on") render();
+  if(k.startsWith("cal.")){ const o=$("#o_"+k.replace(/\W/g,"_")); if(o&&FMT[k]) o.textContent=FMT[k](num(v)); if(k.startsWith("cal.pts")&&!!calFn(S)!==!!$("#ovLayer svg")) render(); else refreshOverlay(); }
+  if(step==="report"&&k==="job.notes"){ clearTimeout(window._rp); window._rp=setTimeout(fillReport,400); }
+});
+document.addEventListener("change",e=>{ const k=e.target.dataset.k; if(!k) return; if(step==="field"&&/\.(measW|reason)$/.test(k)) render(); if(k.startsWith("cal.pts")) render(); });
+
+document.addEventListener("click",e=>{
+  if(e.target.id==="scrim") return closeSheet();
+  const sb=e.target.closest("[data-step]"); if(sb&&sb.closest("#steps")) return go(sb.dataset.step);
+  const mi=e.target.closest("#mapinner");
+  if(mi&&armed){ const r=mi.querySelector("img").getBoundingClientRect(); const id=uid();
+    S.cal.pts.push({id,ch:"",x:(e.clientX-r.left)/r.width*S.photoW,y:(e.clientY-r.top)/r.height*S.photoH}); armed=false; save();
+    const sc=$("#mapscroll"), keep=sc?[sc.scrollLeft,sc.scrollTop]:null; render(); const sc2=$("#mapscroll"); if(sc2&&keep){ sc2.scrollLeft=keep[0]; sc2.scrollTop=keep[1]; }
+    const el=document.getElementById("pt_"+id); if(el){ el.focus({preventScroll:true}); el.scrollIntoView({block:"nearest"}); } return; }
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const a=b.dataset.act, i=+b.dataset.i;
+  switch(a){
+    case "addLane": { const last=S.lanes[S.lanes.length-1]||{}; S.lanes.push({id:uid(),name:"Paver run "+(S.lanes.length+1),start:last.start||"",end:last.end||"",width:last.width||"3.5",dOff:String((num(last.dOff)||0)+(num(last.width)||0))}); save(); render(); break; }
+    case "delLane": S.lanes.splice(i,1); save(); render(); break;
+    case "addExcl": S.exclusions.push({id:uid(),from:"",to:"",lane:"all",reason:""}); save(); render(); break;
+    case "delExcl": S.exclusions.splice(i,1); save(); render(); break;
+    case "draw": if(!S.draws.length){ if(drawSites(S,"")){ save(); render(); toast("Sites drawn"); } break; }
+      $("#redrawBox").innerHTML=`<div class="msg warn" style="gap:10px"><b>Redraw replaces the current sites.</b><span>Both draws stay on the report with your reason. Only redraw if the lot details were wrong; redrawing to get easier sites biases the result.</span>
+       <select id="rdReason"><option value="">Choose a reason…</option><option>Lot details corrected</option><option>Number of sites changed</option><option>Method changed</option><option>Lot extent changed on site</option></select>
+       <div class="row"><button class="btn small" data-act="cancelRedraw" type="button">Cancel</button><button class="btn small primary" data-act="confirmRedraw" type="button">Redraw</button></div></div>`; break;
+    case "cancelRedraw": $("#redrawBox").innerHTML=""; break;
+    case "confirmRedraw": { const r=$("#rdReason").value; if(!r){ toast("Choose a reason for the redraw."); break; } if(drawSites(S,r)){ save(); render(); toast("Sites redrawn"); } break; }
+    case "st": { const no=b.dataset.no, v=b.dataset.v; S.field[no]=S.field[no]||{}; S.field[no].status=S.field[no].status===v?"":v; save(); render(); break; }
+    case "cam": $("#fileCam").click(); break;
+    case "pick": $("#filePick").click(); break;
+    case "clearPhoto": S.photo=null; S.cal=blankCal(); save(); render(); break;
+    case "arm": armed=!armed; render(); break;
+    case "zoom": { zoom=Math.min(4,Math.max(1,zoom+(+b.dataset.z)*0.5)); const mi2=$("#mapinner"); if(mi2) mi2.style.setProperty("--z",zoom); b.parentElement.querySelector(".mono").textContent=Math.round(zoom*100)+"%"; break; }
+    case "delPt": S.cal.pts.splice(i,1); save(); render(); break;
+    case "toReport": go("report"); break;
+    case "nextLot": nextLot(); break;
+    case "print": { flush(); let pa=$("#printArea"); if(!pa){ pa=document.createElement("div"); pa.id="printArea"; document.body.appendChild(pa); }
+      pa.innerHTML=`<style>${REPORT_CSS}</style>`+reportHTML(S); document.body.classList.add("printing"); setTimeout(()=>window.print(),350); break; }
+    case "saveReport": flush(); saveFile(fileBase(S)+".html",reportDoc([S]),"text/html"); break;
+    case "csv": saveFile(fileBase(S)+".csv",csv(),"text/csv"); break;
+    case "exportJob": saveFile(fileBase(S)+".json",JSON.stringify(S),"application/json"); break;
+    case "newProject": { flush(); S=blankJob(); jobs[S.id]=S; persist(S); closeSheet(); go("job"); toast("New project started"); break; }
+    case "openJob": flush(); S=jobs[b.dataset.id]; persist(S); closeSheet(); go(curDraw()?"field":"job"); break;
+    case "askDel": pendingDelete=b.dataset.id; openSheet(); break;
+    case "noDel": pendingDelete=null; openSheet(); break;
+    case "yesDel": { const id=pendingDelete; delete jobs[id]; sel.delete(id); removeStored(id); pendingDelete=null;
+      if(!jobs[S.id]){ const l=Object.values(jobs).sort((a,b)=>b.updated.localeCompare(a.updated)); S=l[0]||blankJob(); jobs[S.id]=S; persist(S); } openSheet(); render(); break; }
+    case "selDay": { const ids=b.dataset.ids.split(","), allOn=ids.every(x=>sel.has(x)); ids.forEach(x=>allOn?sel.delete(x):sel.add(x)); openSheet(); break; }
+    case "saveSel": { const list=[...sel].map(x=>jobs[x]).filter(Boolean).sort((a,b)=>a.created.localeCompare(b.created)); if(!list.length) break; flush();
+      saveFile("Random sites "+today()+" ("+list.length+" lots).html",reportDoc(list),"text/html"); break; }
+    case "exportSel": { const list=[...sel].map(x=>jobs[x]).filter(Boolean); if(!list.length) break; saveFile("Random sites lots "+today()+".json",JSON.stringify({lots:list}),"application/json"); break; }
+    case "import": $("#fileImport").click(); break;
+    case "closeSheet": closeSheet(); break;
+  }
+});
+document.addEventListener("change",e=>{ if(e.target.dataset.sel){ e.target.checked?sel.add(e.target.dataset.sel):sel.delete(e.target.dataset.sel); openSheet(); } });
+$("#btnBack").onclick=()=>{ const i=STEPS.findIndex(s=>s[0]===step); if(i>0) go(STEPS[i-1][0]); };
+$("#btnNext").onclick=()=>{ const i=STEPS.findIndex(s=>s[0]===step); if(i<STEPS.length-1) go(STEPS[i+1][0]); else nextLot(); };
+$("#btnJobs").onclick=()=>openSheet();
+
+function fileBase(j=S){ return ["Random sites",j.job.lotNo||j.job.ticket||"lot",j.job.date].filter(Boolean).join(" ").replace(/[\\/:*?"<>|]/g,"-"); }
+function csv(){ const d=curDraw(); if(!d) return "No sites drawn\n"; const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  if(d.basis==="qty") return ["Sample,Random r,Take at ("+S.qty.unit+"),Status",...d.sites.map(s=>[s.no,s.r.toFixed(4),s.val.toFixed(2),(S.field[s.no]||{}).status||""].join(","))].join("\n");
+  const rows=[["Lot","Site","Sub-lot","Lane","r1",posLabel(),"r_w","Wn (m)","From lane edge (m)","From datum (m)","Status","Actual position","Actual offset (m)","Reason","Measured width (m)","Subset"]];
+  d.sites.forEach(s=>{ const f=S.field[s.no]||{}, e=eff(s,f); rows.push([S.job.lotNo,s.no,s.stratum||"",s.laneName,s.rl.toFixed(4),fmtPos(s.ch),s.rw.toFixed(4),s.Wn.toFixed(2),e.offL.toFixed(2),e.offD.toFixed(2),f.status||"",f.status==="moved"?fmtPos(e.ch):"",f.status==="moved"?e.offD.toFixed(2):"",f.reason||"",f.measW||"",d.subset&&d.subset.includes(s.no)?S.subset.label:""]); });
+  return rows.map(r=>r.map(q).join(",")).join("\n"); }
+async function saveFile(name,data,mime){
+  if(window.claude&&window.claude.use){ const dl=await window.claude.use("downloads").catch(()=>null);
+    if(!dl){ toast("Saving files isn't available in this view."); return; }
+    try{ await dl.save({filename:name,data}); toast("Saved "+name); }catch(err){ if(err&&err.code!=="declined") toast("Couldn't save: "+(err.message||err.code)); } return; }
+  const url=URL.createObjectURL(new Blob([data],{type:mime})); const a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),3000); toast("Saved "+name);
+}
+
+/* photo */
+function onPhoto(file){ if(!file) return; const rd=new FileReader(); rd.onload=()=>{ const img=new Image(); img.onload=()=>{ const max=2000, sc=Math.min(1,max/Math.max(img.width,img.height)); const c=document.createElement("canvas"); c.width=Math.round(img.width*sc); c.height=Math.round(img.height*sc); c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+  S.photo=c.toDataURL("image/jpeg",0.82); S.photoW=c.width; S.photoH=c.height; S.cal=blankCal(); armed=true; zoom=1; save(); render(); toast("Tap the drawing where you can read a chainage."); }; img.src=rd.result; }; rd.readAsDataURL(file); }
+$("#fileCam").onchange=e=>{ onPhoto(e.target.files[0]); e.target.value=""; };
+$("#filePick").onchange=e=>{ onPhoto(e.target.files[0]); e.target.value=""; };
+$("#fileImport").onchange=async e=>{ let n=0; for(const f of e.target.files){ try{ const o=JSON.parse(await f.text()); const list=o&&o.lots?o.lots:[o];
+    list.forEach(j=>{ if(!j||!j.lanes||!j.job) return; normalise(j); if(jobs[j.id]&&jobs[j.id].updated>=j.updated) return; jobs[j.id]=j; persist(j); n++; S=j; }); }catch(err){} }
+  e.target.value=""; if(n){ closeSheet(); go("draw"); toast(n+" lot"+(n>1?"s":"")+" imported"); } else toast("No new lots found in that file."); };
+
+/* lots sheet */
+function openSheet(){
+  const list=Object.values(jobs).sort((a,b)=>(b.job.date||"").localeCompare(a.job.date||"")||b.updated.localeCompare(a.updated));
+  const days={}; list.forEach(x=>{ (days[x.job.date||"No date"]=days[x.job.date||"No date"]||[]).push(x); });
+  $("#sheetHost").innerHTML=`<div class="scrim" id="scrim"><div class="sheet"><div class="row"><h2 style="flex:1">Lots on this phone</h2><button class="btn small ghost" data-act="closeSheet" type="button">Close</button></div>
+  <div class="row"><button class="btn primary" data-act="nextLot" type="button">Next lot, same job</button><button class="btn" data-act="newProject" type="button">New job</button><button class="btn ghost" data-act="import" type="button">Import</button></div>
+  <p class="hint">Every lot saves on this phone as you go, with or without signal. Back at the lab, tick the lots and save their reports in one file. Lots stay until you delete them; clearing the browser's data also clears them.</p>
+  <p class="hint" style="font-size:.8rem">App version ${APP_VERSION}</p>
+  ${sel.size?`<div class="row" style="background:var(--accent-soft);padding:8px;border-radius:8px"><b style="flex:1">${sel.size} selected</b><button class="btn small primary" data-act="saveSel" type="button">Save reports</button><button class="btn small" data-act="exportSel" type="button">Lot files</button></div>`:""}
+  <div class="joblist">${Object.entries(days).map(([day,xs])=>`<div class="row"><span class="daylabel" style="flex:1">${esc(day===today()?"Today":day)}</span><button class="btn small ghost" data-act="selDay" data-ids="${xs.map(x=>x.id).join(",")}" type="button">Select all</button></div>
+   ${xs.map(x=>{ const pr=progress(x); return `<div class="job ${x.id===S.id?"cur":""}"><input type="checkbox" data-sel="${x.id}" ${sel.has(x.id)?"checked":""} aria-label="Select lot"><div><b>Lot ${esc(x.job.lotNo||"–")} · ${esc(x.job.project||x.job.client||"Untitled")}</b><small>${esc(METHODS[x.method].title)} · ${pr.n?pr.done+"/"+pr.n+" done":"not drawn"}</small></div>
+   <button class="btn small" data-act="openJob" data-id="${x.id}" type="button">Open</button><button class="btn small ghost" data-act="askDel" data-id="${x.id}" type="button">Delete</button></div>
+   ${pendingDelete===x.id?`<div class="confirm"><b>Delete lot ${esc(x.job.lotNo||"")} from this phone?</b><span>Save its report first if the lab needs it.</span><div class="row"><button class="btn small" data-act="noDel" type="button">Keep</button><button class="btn small dark" data-act="yesDel" type="button">Delete</button></div></div>`:""}`; }).join("")}`).join("")}</div></div></div>`;
+}
+function closeSheet(){ pendingDelete=null; $("#sheetHost").innerHTML=""; }
+
+window.addEventListener("afterprint",()=>{ document.body.classList.remove("printing"); const pa=$("#printArea"); if(pa) pa.innerHTML=""; });
+loadAll().then(()=>{ render(); });
+// offline use + home-screen app: only on the hosted copy (it ships a manifest)
+if(document.querySelector('link[rel="manifest"]') && "serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost")){ try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){} }
+</script>
+</body>
+</html>

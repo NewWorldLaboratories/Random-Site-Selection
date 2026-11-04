@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0C272E">
+<title>Random Site Locator Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: field handbook. Brand band, contents chips, numbered step sections in one 68ch column; callouts by role. */
+:root{
+  --bg:#EDF2F1; --surface:#FFFFFF; --sunk:#F4F7F6; --ink:#0C272E; --muted:#526B6E; --line:#D0DCDA;
+  --brand:#16B28B; --accent:#0B7F62; --accent-soft:#DDF4EC;
+  --asphalt:#3A4246; --on-asphalt:#FFFFFF; --marking:#F2C230;
+  --warn:#8A5300; --warn-soft:#FBF1D9; --bad:#B42318; --bad-soft:#FBE4E1;
+  --f-display:"Montserrat","Segoe UI",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1B20; --surface:#10262C; --sunk:#0D2026; --ink:#E6EEEC; --muted:#93AAAB; --line:#213D43;
+  --brand:#16B28B; --accent:#22C79D; --accent-soft:#103A30;
+  --asphalt:#2B3236; --on-asphalt:#FFFFFF; --marking:#E9B71E;
+  --warn:#E3B341; --warn-soft:#33290F; --bad:#FF7B6E; --bad-soft:#3A1A17;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1B20; --surface:#10262C; --sunk:#0D2026; --ink:#E6EEEC; --muted:#93AAAB; --line:#213D43;
+  --brand:#16B28B; --accent:#22C79D; --accent-soft:#103A30;
+  --asphalt:#2B3236; --on-asphalt:#FFFFFF; --marking:#E9B71E;
+  --warn:#E3B341; --warn-soft:#33290F; --bad:#FF7B6E; --bad-soft:#3A1A17;
+  color-scheme:dark}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 var(--f-body)}
+img{max-width:100%}
+.wrap{max-width:820px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band{background:var(--surface);border-bottom:3px solid var(--brand)}
+.band .wrap{display:flex;gap:14px;align-items:center;padding-block:16px}
+.band img{height:52px;width:auto;flex:none}
+.logo-d{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo-l{display:none}:root:not([data-theme="light"]) .logo-d{display:block}}
+:root[data-theme="dark"] .logo-l{display:none}:root[data-theme="dark"] .logo-d{display:block}
+.band em{display:block;font:600 .7rem var(--f-display);letter-spacing:.2em;text-transform:uppercase;color:var(--brand);font-style:normal}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:1.45rem}
+h2{font-size:1.25rem;display:flex;gap:10px;align-items:center}
+h2 .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--brand);color:#FFFFFF;display:grid;place-items:center;font:600 .95rem var(--f-mono)}
+h3{font-size:.95rem;margin-top:6px}
+main{padding-block:20px 48px;display:grid;gap:18px}
+section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:12px;min-width:0}
+section>*{max-width:68ch}
+p,ul,ol{margin:0}
+ul,ol{padding-left:1.25em;display:grid;gap:6px}
+li::marker{color:var(--accent);font-weight:600}
+b{font-weight:600}
+.ui{font-weight:600;background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:0 6px;white-space:nowrap}
+.mono{font-family:var(--f-mono);font-size:.92em}
+.toc{display:flex;flex-wrap:wrap;gap:6px}
+.toc a{color:var(--ink);text-decoration:none;border:1.5px solid var(--line);border-radius:999px;padding:5px 12px;font-weight:600;font-size:.92rem;background:var(--surface)}
+.toc a:hover,.toc a:focus-visible{border-color:var(--accent);outline:none}
+a{color:var(--accent)}
+.quick{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.quick h2{color:var(--surface)}
+.quick ol{counter-reset:q;list-style:none;padding:0;gap:10px}
+.quick li{counter-increment:q;display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.quick li::before{content:counter(q);width:28px;height:28px;border-radius:50%;background:var(--brand);color:#FFFFFF;display:grid;place-items:center;font:600 .85rem var(--f-mono)}
+.quick b{color:var(--brand)}
+.call{border-radius:8px;padding:12px 14px;display:grid;gap:6px}
+.call.rule{background:var(--warn-soft);color:var(--ink);border-left:4px solid var(--warn)}
+.call.rule strong{color:var(--warn)}
+.call.tip{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.call.tip strong{color:var(--accent)}
+.fig{border:1px solid var(--line);border-radius:8px;background:var(--sunk);overflow-x:auto}
+.fig svg{display:block;width:100%;min-width:560px;height:auto}
+.cap{font-size:.88rem;color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;max-width:none}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--sunk);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;min-width:150px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.92rem}
+.legend span{display:flex;align-items:center;gap:6px}
+.dot{width:18px;height:18px;border-radius:50%;display:inline-block}
+footer{color:var(--muted);font-size:.85rem;padding-bottom:32px}
+svg .road{fill:var(--asphalt)} svg .mk{fill:var(--marking);opacity:.55} svg .datum{stroke:var(--brand);stroke-width:4}
+svg .t{fill:var(--ink);font:600 13px var(--f-body)} svg .tm{fill:var(--muted);font:12px var(--f-mono)}
+svg .tw{fill:var(--on-asphalt);font:600 12px var(--f-body)} svg .dim{stroke:var(--on-asphalt);stroke-width:1.5}
+svg .ar{stroke:var(--muted);stroke-width:1.5} svg .arh{fill:var(--muted)} svg .site{fill:var(--brand);stroke:#FFFFFF;stroke-width:2}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;font-size:11pt}
+  .toc{display:none}
+  section{break-inside:avoid;border:0;padding:0 0 8px}
+  .quick{background:#fff;color:#0C272E;border:2px solid #0C272E;padding:12px}
+  .quick h2{color:#0C272E}
+}
+</style>
+</head>
+<body>
+<header class="band"><div class="wrap">
+  <img class="logo-l" src="data:image/png;base64,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" alt="New World Laboratories"><img class="logo-d" src="data:image/png;base64,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" alt="New World Laboratories">
+  <div><em>New World Laboratories</em><h1>Random Site Locator: field guide</h1></div>
+</div></header>
+
+<main class="wrap">
+  <nav class="toc" aria-label="Contents">
+    <a href="#quick">Quick start</a><a href="#setup">Phone set-up</a><a href="#job">1 Job</a><a href="#lot">2 Lot</a><a href="#draw">3 Draw</a><a href="#plan">4 Plan</a><a href="#onsite">5 On site</a><a href="#report">6 Report</a><a href="#lots">Several lots</a><a href="#lab">At the lab</a><a href="#rules">Rules</a><a href="#trouble">Problems</a>
+  </nav>
+
+  <section class="quick" id="quick">
+    <h2>Quick start</h2>
+    <ol>
+      <li><span>Open <b>Random Sites</b> from your home screen. The header should say <b>Saved on this phone</b>.</span></li>
+      <li><span><b>Job</b>: client, project, lot number, technician. Pick the method the specification names.</span></li>
+      <li><span><b>Lot</b>: each lane or paver run in the order it was laid, the number of sites, clearances and any excluded zones. Fix anything in red.</span></li>
+      <li><span><b>Draw</b>: tap Draw once. Only redraw if the lot details were wrong.</span></li>
+      <li><span><b>Plan</b>: photograph the supplied drawing, tap two or more spots where you can read the chainage, and type each chainage in.</span></li>
+      <li><span><b>On site</b>: set out each site and mark it Tested, Relocated or Not tested.</span></li>
+      <li><span><b>Report</b>: check it, then tap <b>Start next lot</b> for the next location.</span></li>
+      <li><span><b>At the lab</b>: Lots, Select all, Save reports.</span></li>
+    </ol>
+  </section>
+
+  <section id="setup">
+    <h2>Phone set-up (once)</h2>
+    <ol>
+      <li>Open the app address the office gives you, in <b>Safari</b> on iPhone or <b>Chrome</b> on Android. Don't use a private or incognito tab.</li>
+      <li>Add it to the home screen. iPhone: tap Share, then <span class="ui">Add to Home Screen</span>. Android: tap the ⋮ menu, then <span class="ui">Add to Home screen</span> or <span class="ui">Install app</span>.</li>
+      <li>Open it once from the new icon while you have signal. After that it opens without signal.</li>
+    </ol>
+    <div class="call tip"><strong>Why the home screen matters</strong><span>Lots are saved inside the phone's browser. On iPhone, Safari can clear a website's saved data if it isn't opened for 7 days. A home-screen app isn't cleared that way. Either way, save the day's reports at the lab the same day.</span></div>
+    <p>Tap <span class="ui">Help</span> in the app header at any time to open this guide.</p>
+  </section>
+
+  <section id="job">
+    <h2><span class="n">1</span>Job</h2>
+    <p>Fill in the client, project, location, lot number, ticket number, client reference, date, technician, material or layer, and test. These print at the top of the report.</p>
+    <h3>Method</h3>
+    <p>Use the method the contract specification names. If you aren't sure, ask your supervisor before you draw.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>WA 0.1 Stratified</td><td>Splits the lot into N sub-lots of equal area and puts one site in each. Sub-lots carry on from the end of one paver run into the start of the next.</td></tr>
+        <tr><td>WA 0.1 Unstratified</td><td>Sites can fall anywhere in the lot. Every spot has the same chance.</td></tr>
+        <tr><td>AS 1289.1.4.1</td><td>Random number method. Sites anywhere along the length, with a random offset across the width.</td></tr>
+        <tr><td>AS 1289.1.4.2</td><td>Stratified random number method. Splits the length into N equal strata and puts one site in each.</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Select sites by</h3>
+    <ul>
+      <li><b>Location</b>: cores, nuclear density, sand replacement, anything set out on the ground.</li>
+      <li><b>Time / tonnage / volume</b>: sampling from production. You enter the total for the lot and the app gives the tonnage, volume or clock time for each sample.</li>
+    </ul>
+  </section>
+
+  <section id="lot">
+    <h2><span class="n">2</span>Lot</h2>
+    <ul>
+      <li><b>Measure along</b>: Chainage (metres) or SLK (kilometres, e.g. <span class="mono">12.345</span>).</li>
+      <li><b>Number of sites (N)</b>: from the specification.</li>
+      <li><b>Keep clear of longitudinal joints &amp; edges</b> (starts at 0.3 m) and <b>transverse joints &amp; ends</b> (starts at 0.5 m). Set these to what the specification or your supervisor says. The starting values are not a requirement of the standards.</li>
+      <li><b>Offset datum</b>: the edge that every offset is measured from. The default is the left-hand edge of seal, looking in the direction of increasing chainage.</li>
+    </ul>
+    <h3>Lanes and paver runs</h3>
+    <p>Add one card for each lane or paver run, <b>in the order it was laid</b>. For each one enter:</p>
+    <ul>
+      <li><b>Start</b> and <b>End</b> chainage as it was laid. If a run was laid going down-chainage, the start is the bigger number.</li>
+      <li><b>Width</b> of the lane or run.</li>
+      <li><b>Near edge from datum</b>: how far the closest edge of this lane is from the datum. The first lane against the datum is 0. The next lane over is the width of the first lane.</li>
+    </ul>
+    <div class="fig">
+      <svg viewBox="0 0 680 290" role="img" aria-label="Plan view of two lanes showing the datum edge, near edge from datum and site offsets">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="arh"/></marker>
+        <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#FFFFFF"/></marker></defs>
+        <text x="200" y="48" class="t">Datum: left-hand edge of seal</text>
+        <rect x="200" y="62" width="460" height="142" class="road"/>
+        <line x1="200" y1="62" x2="660" y2="62" class="datum"/>
+        <rect x="200" y="62" width="460" height="6" class="mk"/>
+        <rect x="200" y="126" width="460" height="12" class="mk"/>
+        <rect x="200" y="198" width="460" height="6" class="mk"/>
+        <line x1="200" y1="132" x2="660" y2="132" stroke="#FFFFFF" stroke-opacity=".7" stroke-dasharray="10 8" stroke-width="2"/>
+        <text x="12" y="92" class="t">Lane 1 · 3.5 m</text><text x="12" y="110" class="tm">near edge 0 m</text>
+        <text x="12" y="164" class="t">Lane 2 · 3.6 m</text><text x="12" y="182" class="tm">near edge 3.5 m</text>
+        <line x1="420" y1="64" x2="420" y2="167" class="dim" marker-start="url(#aw)" marker-end="url(#aw)"/>
+        <text x="410" y="100" class="tw" text-anchor="end">5.07 m from datum</text>
+        <line x1="470" y1="134" x2="470" y2="167" class="dim" marker-start="url(#aw)" marker-end="url(#aw)"/>
+        <text x="480" y="160" class="tw">1.57 m from lane edge</text>
+        <circle cx="445" cy="168" r="11" class="site"/><text x="445" y="172" text-anchor="middle" style="font:600 11px var(--f-mono);fill:#FFFFFF">6</text>
+        <line x1="200" y1="232" x2="660" y2="232" class="ar" marker-end="url(#ah)"/>
+        <text x="200" y="254" class="tm">Ch 100</text><text x="660" y="254" class="tm" text-anchor="end">Ch 360</text>
+        <text x="430" y="254" class="t" text-anchor="middle">Increasing chainage</text>
+        <text x="200" y="280" class="tm">Yellow = clearance from joints and edges. Sites can't land in it.</text>
+      </svg>
+    </div>
+    <p class="cap">Lane 1 sits against the datum, so its near edge is 0 m. Lane 2's near edge is 3.5 m from the datum. Site 6 is set out 5.07 m from the datum, which is 1.57 m into lane 2.</p>
+    <ul>
+      <li><span class="ui">Add lane / paver run</span> copies the last lane's chainages and width, and fills in the next near edge for you. Check it.</li>
+      <li>If a lane changes width part way, enter it as two lanes, split at the change.</li>
+      <li>On curves, measure along the chainage of the alignment and take offsets square to it.</li>
+    </ul>
+    <h3>Excluded zones</h3>
+    <p>Add any part of the lot that can't be tested, such as a bridge deck, intersection, pit or hand-work area. Enter from and to chainage, which lanes it covers and the reason. The transverse clearance is kept around each zone, and every zone is listed on the report.</p>
+    <h3>Check the lot</h3>
+    <p>The panel at the bottom shows the testable length, area and sub-lot size, with a drawing of the lot. Red messages must be fixed before you can draw. Amber messages are warnings to read.</p>
+  </section>
+
+  <section id="draw">
+    <h2><span class="n">3</span>Draw</h2>
+    <ol>
+      <li>If the lab needs a subset (for example one MDD sample in every three sites), tick <span class="ui">Also pick a random subset</span> first and set the group size.</li>
+      <li>Tap <span class="ui">Draw random sites</span>. The phone generates the random numbers. Never type in your own.</li>
+      <li>The table lists each site's lane, chainage and offset from the datum, plus the random numbers used.</li>
+    </ol>
+    <div class="call rule"><strong>Redrawing</strong><span>Only redraw if the lot details were wrong, such as a wrong chainage, the wrong number of sites, the wrong method, or the lot changed on site. You must pick a reason, and every draw stays on the report. Redrawing to get easier sites biases the result and isn't allowed.</span></div>
+    <p>If you change the method or lot after drawing, the app shows an amber warning. Redraw with the reason that fits.</p>
+  </section>
+
+  <section id="plan">
+    <h2><span class="n">4</span>Plan</h2>
+    <p>This step draws the lot and the sites on top of a photo of the supplied drawing. It is optional, but it is the quickest way to see where the sites are.</p>
+    <ol>
+      <li>Lay the drawing flat in good light and tap <span class="ui">Take photo</span>. Hold the phone square on, with the whole lot in frame.</li>
+      <li>The app goes straight into adding points. Tap the drawing where you can read a chainage, then type that chainage into the box that appears (P1).</li>
+      <li>Tap <span class="ui">Add chainage point</span> and repeat. You need <b>at least two</b>, as far apart as possible, ideally one near each end. On a curve, add more points around the bend.</li>
+      <li>All points must sit on <b>one line along the road</b>, such as the set-out line, an edge line or the centreline.</li>
+    </ol>
+    <h3>Line it up</h3>
+    <ul>
+      <li><b>Datum from tapped line</b>: if the line you tapped isn't the datum edge, slide this until the lot's datum edge sits on the datum on the drawing.</li>
+      <li><b>Offsets go</b> <span class="ui">Right of travel</span> or <span class="ui">Left of travel</span>: if the lot appears on the wrong side of the line, flip this.</li>
+      <li><b>Width scale</b>: many drawings aren't to scale across the road. Increase it until the lanes match the drawing. Leave it at × 1.0 for aerial photos and scaled plans.</li>
+      <li><b>Overlay strength</b>: makes the lot more or less see-through.</li>
+      <li>Use <span class="ui">+</span> and <span class="ui">−</span> to zoom, and scroll to move around. Use <span class="ui">Remove</span> to delete a point that's wrong, then tap it again.</li>
+    </ul>
+    <div class="legend"><span><i class="dot" style="background:#16B28B"></i>To test</span><span><i class="dot" style="background:#FFFFFF;box-shadow:inset 0 0 0 3px #16B28B"></i>Tested</span><span><i class="dot" style="background:#D99A06"></i>Relocated</span><span><i class="dot" style="background:#F2C230"></i>Joint / edge clearance</span><span><i class="dot" style="background:#B42318"></i>Excluded</span></div>
+    <p class="cap">The overlay is a guide only. Sites are always set out by measuring the chainage and offset.</p>
+  </section>
+
+  <section id="onsite">
+    <h2><span class="n">5</span>On site</h2>
+    <p>Each site has a card with its chainage and offset from the datum in large numbers, plus the lane, sub-lot and distance from the lane edge.</p>
+    <ol>
+      <li>Set out the site by tape or wheel to within <b>0.5 m</b> (WA 0.1 cl 4.2.1(h)).</li>
+      <li>Do the test, then tap <span class="ui">Mark tested</span>.</li>
+      <li>If the site lands on a joint, pit, structure or obstruction, move to the <b>nearest</b> testable spot. Tap <span class="ui">Relocated</span> and enter the actual chainage, actual offset and the reason.</li>
+      <li>If a site can't be tested at all, tap <span class="ui">Not tested</span> and write the reason.</li>
+    </ol>
+    <p><b>Measured width</b>: if the lane is a different width at the site than you entered, open <span class="ui">Measured width / notes</span> and enter what you measured. The app recalculates the offset, as AS 1289.1.4.1 cl 3.2(d)(iii) requires. Set out to the new offset shown on the card.</p>
+    <p>For time, tonnage or volume sampling, each card shows when to take the sample. Tap <span class="ui">Mark taken</span> after taking it.</p>
+    <p>When every site has a result, a green message offers <span class="ui">Check report</span> and <span class="ui">Start next lot</span>.</p>
+  </section>
+
+  <section id="report">
+    <h2><span class="n">6</span>Report</h2>
+    <p>The report shows on screen first, so you can check it before saving. An amber message lists any sites without an on-site result.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Button</th><th>What you get</th></tr></thead>
+      <tbody>
+        <tr><td>Print / PDF</td><td>Opens the phone's print screen. Choose a printer, or save as PDF.</td></tr>
+        <tr><td>Save report</td><td>A web page file that opens on any phone or PC and prints as one A4 landscape page, plus a page for the site plan if you took a photo.</td></tr>
+        <tr><td>Sites .csv</td><td>The site list for a spreadsheet or LIMS.</td></tr>
+        <tr><td>Lot file</td><td>The full lot record. Use <span class="ui">Lots</span>, then <span class="ui">Import</span> to open it on another phone or PC.</td></tr>
+        <tr><td>Next lot</td><td>Saves this lot and starts the next one. See below.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Add anything else the reviewer needs in <b>Report notes</b>. The report has lines for the technician, the checker and the date.</p>
+    <p class="cap">On iPhone, saved files go to the Files app, under Downloads.</p>
+  </section>
+
+  <section id="lots">
+    <h2>Several lots in one trip</h2>
+    <p>Every lot saves on the phone as you work, with or without signal. The header shows <b>Saved on this phone</b> and the time.</p>
+    <p><span class="ui">Start next lot</span> keeps the job details, method, number of sites, clearances, datum, lane names, widths and near edges, and the drawing with its chainage points. It clears the lot number, chainages, excluded zones and sites. Enter the new lot number and chainages, check the lanes, then draw.</p>
+    <p>Tap <span class="ui">Lots</span> in the header to see every lot on the phone, grouped by date. Use <span class="ui">Open</span> to go back to one, or <span class="ui">New job</span> to start from blank.</p>
+  </section>
+
+  <section id="lab">
+    <h2>Back at the lab</h2>
+    <ol>
+      <li>Tap <span class="ui">Lots</span>, then <span class="ui">Select all</span> next to today.</li>
+      <li>Tap <span class="ui">Save reports</span>. You get one file with every lot, each on its own pages. Tap <span class="ui">Lot files</span> as well if the lab keeps the raw records.</li>
+      <li>File them as the lab procedure says.</li>
+      <li>Once they're filed, delete the old lots from the phone. They stay until you delete them.</li>
+    </ol>
+  </section>
+
+  <section id="rules">
+    <h2>Rules that keep the draw compliant</h2>
+    <ul>
+      <li>Use the method the specification names.</li>
+      <li>Enter the lot as it really is, including every excluded zone.</li>
+      <li>Let the phone generate the random numbers. Draw before you look at the ground.</li>
+      <li>Don't redraw for convenience. Every redraw needs a reason and stays on the report.</li>
+      <li>Move a site only to the nearest testable spot, and record why.</li>
+      <li>Set out by measurement, not from the overlay.</li>
+    </ul>
+  </section>
+
+  <section id="trouble">
+    <h2>Problems and fixes</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>You see</th><th>What to do</th></tr></thead>
+      <tbody>
+        <tr><td>Enter start and end chainage</td><td>A lane is missing its start or end. Fill both in.</td></tr>
+        <tr><td>Start and end are the same</td><td>Check the chainages for that lane.</td></tr>
+        <tr><td>Width is not more than twice the clearance</td><td>The lane is too narrow for the joint clearance. Check the width and the clearance.</td></tr>
+        <tr><td>Nothing left to test after exclusions</td><td>An excluded zone covers the whole lane. Check its from and to chainages and which lanes it applies to.</td></tr>
+        <tr><td>Lanes have different widths (AS 1289 only)</td><td>Normal for AS 1289, which uses equal-length strata. If the spec wants equal-area sub-lots, it will name WA 0.1.</td></tr>
+        <tr><td>Sites are less than 2 m apart</td><td>Check the number of sites and the lot length.</td></tr>
+        <tr><td>Method or lot changed after this draw</td><td>Redraw with the reason that fits.</td></tr>
+        <tr><td>Lot drawn on the wrong side of the line</td><td>Flip Offsets go to Right of travel or Left of travel.</td></tr>
+        <tr><td>Lot too thin or too wide on the drawing</td><td>Adjust Width scale.</td></tr>
+        <tr><td>Add one more chainage point</td><td>You need at least two points with different chainages.</td></tr>
+        <tr><td>Not saved – export this lot</td><td>The phone couldn't save. Go to Report and tap Lot file and Save report now. Then free up space on the phone, and check it isn't a private tab.</td></tr>
+        <tr><td>Lots are missing</td><td>Lots belong to one browser on one phone. Open the app the same way you saved them (the home-screen icon, not a different browser). Clearing browser data deletes them.</td></tr>
+        <tr><td>Won't open without signal</td><td>Open it once with signal from the home-screen icon. Do the same after the office updates the app.</td></tr>
+        <tr><td>Save does nothing on iPhone</td><td>Look in the Files app, under Downloads.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <footer>New World Laboratories · Random Site Locator field guide · matches app version 1.0.0</footer>
+</main>
+</body>
+</html>
