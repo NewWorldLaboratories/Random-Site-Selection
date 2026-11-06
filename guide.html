@@ -107,72 +107,35 @@ svg .ar{stroke:var(--muted);stroke-width:1.5} svg .arh{fill:var(--muted)} svg .s
 </div></header>
 
 <main class="wrap">
-  <nav class="toc" aria-label="Contents">
-    <a href="#quick">Quick start</a><a href="#setup">Phone set-up</a><a href="#job">1 Job</a><a href="#lot">2 Lot</a><a href="#draw">3 Draw</a><a href="#plan">4 Plan</a><a href="#onsite">5 On site</a><a href="#report">6 Report</a><a href="#lots">Several lots</a><a href="#lab">At the lab</a><a href="#rules">Rules</a><a href="#trouble">Problems</a>
-  </nav>
-
   <section class="quick" id="quick">
-    <h2>Quick start</h2>
+    <h2>Quick card</h2>
     <ol>
-      <li><span>Open <b>Random Sites</b> from your home screen. The header should say <b>Saved on this phone</b>.</span></li>
-      <li><span><b>Job</b>: client, project, lot number, technician. Pick the method the specification names.</span></li>
-      <li><span><b>Lot</b>: each lane or paver run in the order it was laid, the number of sites, clearances and any excluded zones. Fix anything in red.</span></li>
-      <li><span><b>Draw</b>: tap Draw once. Only redraw if the lot details were wrong.</span></li>
-      <li><span><b>Plan</b>: photograph the supplied drawing, tap two or more spots where you can read the chainage, and type each chainage in.</span></li>
-      <li><span><b>On site</b>: set out each site and mark it Tested, Relocated or Not tested.</span></li>
-      <li><span><b>Report</b>: check it, then tap <b>Start next lot</b> for the next location.</span></li>
-      <li><span><b>At the lab</b>: Lots, Select all, Save reports.</span></li>
+      <li><span><b>Job</b>: details and the method from the spec.</span></li>
+      <li><span><b>Lot &amp; sites</b>: enter each run. Sites appear by themselves.</span></li>
+      <li><span><b>Plan</b> (optional): add the drawing, tap two chainages.</span></li>
+      <li><span><b>Report</b>: check, <b>Save PDF</b>, <b>Next lot</b>.</span></li>
     </ol>
   </section>
 
   <section id="setup">
-    <h2>Phone set-up (once)</h2>
-    <ol>
-      <li>Open the app address the office gives you, in <b>Safari</b> on iPhone or <b>Chrome</b> on Android. Don't use a private or incognito tab.</li>
-      <li>Add it to the home screen. iPhone: tap Share, then <span class="ui">Add to Home Screen</span>. Android: tap the ⋮ menu, then <span class="ui">Add to Home screen</span> or <span class="ui">Install app</span>.</li>
-      <li>Open it once from the new icon while you have signal. After that it opens without signal.</li>
-    </ol>
-    <div class="call tip"><strong>Why the home screen matters</strong><span>Lots are saved inside the phone's browser. On iPhone, Safari can clear a website's saved data if it isn't opened for 7 days. A home-screen app isn't cleared that way. Either way, save the day's reports at the lab the same day.</span></div>
-    <p>Tap <span class="ui">Help</span> in the app header at any time to open this guide.</p>
+    <h2>First time on a phone</h2>
+    <p>Open the link in Safari or Chrome, add it to your home screen, and open it once with signal. It then works offline and saves as you go.</p>
   </section>
 
   <section id="job">
     <h2><span class="n">1</span>Job</h2>
-    <p>Fill in the client, project, location, lot number, ticket number, client reference, date, technician, material or layer, and test. These print at the top of the report.</p>
-    <h3>Method</h3>
-    <p>Use the method the contract specification names. If you aren't sure, ask your supervisor before you draw.</p>
-    <div class="tbl"><table>
-      <thead><tr><th>Method</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td>WA 0.1 Stratified</td><td>Splits the lot into N sub-lots of equal area and puts one site in each. Sub-lots carry on from the end of one paver run into the start of the next.</td></tr>
-        <tr><td>WA 0.1 Unstratified</td><td>Sites can fall anywhere in the lot. Every spot has the same chance.</td></tr>
-        <tr><td>AS 1289.1.4.1</td><td>Random number method. Sites anywhere along the length, with a random offset across the width.</td></tr>
-        <tr><td>AS 1289.1.4.2</td><td>Stratified random number method. Splits the length into N equal strata and puts one site in each.</td></tr>
-      </tbody>
-    </table></div>
-    <h3>Select sites by</h3>
-    <ul>
-      <li><b>Location</b>: cores, nuclear density, sand replacement, anything set out on the ground.</li>
-      <li><b>Time / tonnage / volume</b>: sampling from production. You enter the total for the lot and the app gives the tonnage, volume or clock time for each sample.</li>
-    </ul>
+    <p>Fill in the details and pick the method the spec names.</p>
   </section>
 
   <section id="lot">
-    <h2><span class="n">2</span>Lot</h2>
+    <h2><span class="n">2</span>Lot &amp; sites</h2>
     <ul>
-      <li><b>Measure along</b>: Chainage (metres) or SLK (kilometres, e.g. <span class="mono">12.345</span>).</li>
-      <li><b>Number of sites (N)</b>: from the specification.</li>
-      <li><b>Keep clear of longitudinal joints &amp; edges</b> (starts at 0.3 m) and <b>transverse joints &amp; ends</b> (starts at 0.5 m). Set these to what the specification or your supervisor says. The starting values are not a requirement of the standards.</li>
-      <li><b>Offset datum</b>: the edge that every offset is measured from. The default is the left-hand edge of seal, looking in the direction of increasing chainage.</li>
+      <li>Add runs <b>in the order laid</b>: start, end, width, and near edge from datum (0 for the first).</li>
+      <li>Width changes? <span class="ui">Width changes along the run</span>. Soils: one run, length × width.</li>
+      <li>Can't test somewhere? <span class="ui">Add excluded zone</span>.</li>
+      <li>Set out each site's <b>chainage</b> and <b>offset from datum</b>. Measured a different width? Type it in the Width column.</li>
     </ul>
-    <h3>Lanes and paver runs</h3>
-    <p>Add one card for each lane or paver run, <b>in the order it was laid</b>. For each one enter:</p>
-    <ul>
-      <li><b>Start</b> and <b>End</b> chainage as it was laid. If a run was laid going down-chainage, the start is the bigger number.</li>
-      <li><b>Width</b> of the lane or run.</li>
-      <li><b>Near edge from datum</b>: how far the closest edge of this lane is from the datum. The first lane against the datum is 0. The next lane over is the width of the first lane.</li>
-    </ul>
-    <div class="fig">
+        <div class="fig">
       <svg viewBox="0 0 680 290" role="img" aria-label="Plan view of two lanes showing the datum edge, near edge from datum and site offsets">
         <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="arh"/></marker>
         <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#FFFFFF"/></marker></defs>
@@ -196,134 +159,36 @@ svg .ar{stroke:var(--muted);stroke-width:1.5} svg .arh{fill:var(--muted)} svg .s
         <text x="200" y="280" class="tm">Yellow = clearance from joints and edges. Sites can't land in it.</text>
       </svg>
     </div>
-    <p class="cap">Lane 1 sits against the datum, so its near edge is 0 m. Lane 2's near edge is 3.5 m from the datum. Site 6 is set out 5.07 m from the datum, which is 1.57 m into lane 2.</p>
-    <ul>
-      <li><span class="ui">Add lane / paver run</span> copies the last lane's chainages and width, and fills in the next near edge for you. Check it.</li>
-      <li>If a lane changes width part way, enter it as two lanes, split at the change.</li>
-      <li>On curves, measure along the chainage of the alignment and take offsets square to it.</li>
-    </ul>
-    <h3>Excluded zones</h3>
-    <p>Add any part of the lot that can't be tested, such as a bridge deck, intersection, pit or hand-work area. Enter from and to chainage, which lanes it covers and the reason. The transverse clearance is kept around each zone, and every zone is listed on the report.</p>
-    <h3>Check the lot</h3>
-    <p>The panel at the bottom shows the testable length, area and sub-lot size, with a drawing of the lot. Red messages must be fixed before you can draw. Amber messages are warnings to read.</p>
-  </section>
-
-  <section id="draw">
-    <h2><span class="n">3</span>Draw</h2>
-    <ol>
-      <li>If the lab needs a subset (for example one MDD sample in every three sites), tick <span class="ui">Also pick a random subset</span> first and set the group size.</li>
-      <li>Tap <span class="ui">Draw random sites</span>. The phone generates the random numbers. Never type in your own.</li>
-      <li>The table lists each site's lane, chainage and offset from the datum, plus the random numbers used.</li>
-    </ol>
-    <div class="call rule"><strong>Redrawing</strong><span>Only redraw if the lot details were wrong, such as a wrong chainage, the wrong number of sites, the wrong method, or the lot changed on site. You must pick a reason, and every draw stays on the report. Redrawing to get easier sites biases the result and isn't allowed.</span></div>
-    <p>If you change the method or lot after drawing, the app shows an amber warning. Redraw with the reason that fits.</p>
   </section>
 
   <section id="plan">
-    <h2><span class="n">4</span>Plan</h2>
-    <p>This step draws the lot and the sites on top of a photo of the supplied drawing. It is optional, but it is the quickest way to see where the sites are.</p>
-    <ol>
-      <li>Lay the drawing flat in good light and tap <span class="ui">Take photo</span>. Hold the phone square on, with the whole lot in frame.</li>
-      <li>The app goes straight into adding points. Tap the drawing where you can read a chainage, then type that chainage into the box that appears (P1).</li>
-      <li>Tap <span class="ui">Add chainage point</span> and repeat. You need <b>at least two</b>, as far apart as possible, ideally one near each end. On a curve, add more points around the bend.</li>
-      <li>All points must sit on <b>one line along the road</b>, such as the set-out line, an edge line or the centreline.</li>
-    </ol>
-    <h3>Line it up</h3>
-    <ul>
-      <li><b>Datum from tapped line</b>: if the line you tapped isn't the datum edge, slide this until the lot's datum edge sits on the datum on the drawing.</li>
-      <li><b>Offsets go</b> <span class="ui">Right of travel</span> or <span class="ui">Left of travel</span>: if the lot appears on the wrong side of the line, flip this.</li>
-      <li><b>Width scale</b>: many drawings aren't to scale across the road. Increase it until the lanes match the drawing. Leave it at × 1.0 for aerial photos and scaled plans.</li>
-      <li><b>Overlay strength</b>: makes the lot more or less see-through.</li>
-      <li>Use <span class="ui">+</span> and <span class="ui">−</span> to zoom, and scroll to move around. Use <span class="ui">Remove</span> to delete a point that's wrong, then tap it again.</li>
-    </ul>
-    <div class="legend"><span><i class="dot" style="background:#16B28B"></i>To test</span><span><i class="dot" style="background:#FFFFFF;box-shadow:inset 0 0 0 3px #16B28B"></i>Tested</span><span><i class="dot" style="background:#D99A06"></i>Relocated</span><span><i class="dot" style="background:#F2C230"></i>Joint / edge clearance</span><span><i class="dot" style="background:#B42318"></i>Excluded</span></div>
-    <p class="cap">The overlay is a guide only. Sites are always set out by measuring the chainage and offset.</p>
-  </section>
-
-  <section id="onsite">
-    <h2><span class="n">5</span>On site</h2>
-    <p>Each site has a card with its chainage and offset from the datum in large numbers, plus the lane, sub-lot and distance from the lane edge.</p>
-    <ol>
-      <li>Set out the site by tape or wheel to within <b>0.5 m</b> (WA 0.1 cl 4.2.1(h)).</li>
-      <li>Do the test, then tap <span class="ui">Mark tested</span>.</li>
-      <li>If the site lands on a joint, pit, structure or obstruction, move to the <b>nearest</b> testable spot. Tap <span class="ui">Relocated</span> and enter the actual chainage, actual offset and the reason.</li>
-      <li>If a site can't be tested at all, tap <span class="ui">Not tested</span> and write the reason.</li>
-    </ol>
-    <p><b>Measured width</b>: if the lane is a different width at the site than you entered, open <span class="ui">Measured width / notes</span> and enter what you measured. The app recalculates the offset, as AS 1289.1.4.1 cl 3.2(d)(iii) requires. Set out to the new offset shown on the card.</p>
-    <p>For time, tonnage or volume sampling, each card shows when to take the sample. Tap <span class="ui">Mark taken</span> after taking it.</p>
-    <p>When every site has a result, a green message offers <span class="ui">Check report</span> and <span class="ui">Start next lot</span>.</p>
+    <h2><span class="n">3</span>Plan</h2>
+    <p>Photo or drop the drawing, tap <span class="ui">Add chainage point</span> at two readable chainages, type them in, then drag to fine-tune.</p>
   </section>
 
   <section id="report">
-    <h2><span class="n">6</span>Report</h2>
-    <p>The report shows on screen first, so you can check it before saving. An amber message lists any sites without an on-site result.</p>
-    <div class="tbl"><table>
-      <thead><tr><th>Button</th><th>What you get</th></tr></thead>
-      <tbody>
-        <tr><td>Print / PDF</td><td>Opens the phone's print screen. Choose a printer, or save as PDF.</td></tr>
-        <tr><td>Save report</td><td>A web page file that opens on any phone or PC and prints as one A4 landscape page, plus a page for the site plan if you took a photo.</td></tr>
-        <tr><td>Sites .csv</td><td>The site list for a spreadsheet or LIMS.</td></tr>
-        <tr><td>Lot file</td><td>The full lot record. Use <span class="ui">Lots</span>, then <span class="ui">Import</span> to open it on another phone or PC.</td></tr>
-        <tr><td>Next lot</td><td>Saves this lot and starts the next one. See below.</td></tr>
-      </tbody>
-    </table></div>
-    <p>Add anything else the reviewer needs in <b>Report notes</b>. The report has lines for the technician, the checker and the date.</p>
-    <p class="cap">On iPhone, saved files go to the Files app, under Downloads.</p>
-  </section>
-
-  <section id="lots">
-    <h2>Several lots in one trip</h2>
-    <p>Every lot saves on the phone as you work, with or without signal. The header shows <b>Saved on this phone</b> and the time.</p>
-    <p><span class="ui">Start next lot</span> keeps the job details, method, number of sites, clearances, datum, lane names, widths and near edges, and the drawing with its chainage points. It clears the lot number, chainages, excluded zones and sites. Enter the new lot number and chainages, check the lanes, then draw.</p>
-    <p>Tap <span class="ui">Lots</span> in the header to see every lot on the phone, grouped by date. Use <span class="ui">Open</span> to go back to one, or <span class="ui">New job</span> to start from blank.</p>
-  </section>
-
-  <section id="lab">
-    <h2>Back at the lab</h2>
-    <ol>
-      <li>Tap <span class="ui">Lots</span>, then <span class="ui">Select all</span> next to today.</li>
-      <li>Tap <span class="ui">Save reports</span>. You get one file with every lot, each on its own pages. Tap <span class="ui">Lot files</span> as well if the lab keeps the raw records.</li>
-      <li>File them as the lab procedure says.</li>
-      <li>Once they're filed, delete the old lots from the phone. They stay until you delete them.</li>
-    </ol>
+    <h2><span class="n">4</span>Report</h2>
+    <p>One A4 page with all workings. <b>Save PDF</b> to file it; <b>Save HTML</b> if you may need to reopen the lot (import it in <span class="ui">Lots</span>).</p>
   </section>
 
   <section id="rules">
-    <h2>Rules that keep the draw compliant</h2>
+    <h2>Rules</h2>
     <ul>
-      <li>Use the method the specification names.</li>
-      <li>Enter the lot as it really is, including every excluded zone.</li>
-      <li>Let the phone generate the random numbers. Draw before you look at the ground.</li>
-      <li>Don't redraw for convenience. Every redraw needs a reason and stays on the report.</li>
-      <li>Move a site only to the nearest testable spot, and record why.</li>
-      <li>Set out by measurement, not from the overlay.</li>
+      <li>Set out to within <b>0.5 m</b>. On a joint or pit, move to the nearest testable spot and note it.</li>
+      <li>Never pick sites yourself. The phone draws them; any change to the lot is recorded on the report.</li>
     </ul>
   </section>
 
   <section id="trouble">
-    <h2>Problems and fixes</h2>
-    <div class="tbl"><table>
-      <thead><tr><th>You see</th><th>What to do</th></tr></thead>
-      <tbody>
-        <tr><td>Enter start and end chainage</td><td>A lane is missing its start or end. Fill both in.</td></tr>
-        <tr><td>Start and end are the same</td><td>Check the chainages for that lane.</td></tr>
-        <tr><td>Width is not more than twice the clearance</td><td>The lane is too narrow for the joint clearance. Check the width and the clearance.</td></tr>
-        <tr><td>Nothing left to test after exclusions</td><td>An excluded zone covers the whole lane. Check its from and to chainages and which lanes it applies to.</td></tr>
-        <tr><td>Lanes have different widths (AS 1289 only)</td><td>Normal for AS 1289, which uses equal-length strata. If the spec wants equal-area sub-lots, it will name WA 0.1.</td></tr>
-        <tr><td>Sites are less than 2 m apart</td><td>Check the number of sites and the lot length.</td></tr>
-        <tr><td>Method or lot changed after this draw</td><td>Redraw with the reason that fits.</td></tr>
-        <tr><td>Lot drawn on the wrong side of the line</td><td>Flip Offsets go to Right of travel or Left of travel.</td></tr>
-        <tr><td>Lot too thin or too wide on the drawing</td><td>Adjust Width scale.</td></tr>
-        <tr><td>Add one more chainage point</td><td>You need at least two points with different chainages.</td></tr>
-        <tr><td>Not saved – export this lot</td><td>The phone couldn't save. Go to Report and tap Lot file and Save report now. Then free up space on the phone, and check it isn't a private tab.</td></tr>
-        <tr><td>Lots are missing</td><td>Lots belong to one browser on one phone. Open the app the same way you saved them (the home-screen icon, not a different browser). Clearing browser data deletes them.</td></tr>
-        <tr><td>Won't open without signal</td><td>Open it once with signal from the home-screen icon. Do the same after the office updates the app.</td></tr>
-        <tr><td>Save does nothing on iPhone</td><td>Look in the Files app, under Downloads.</td></tr>
-      </tbody>
-    </table></div>
+    <h2>Problems</h2>
+    <div class="tbl"><table><tbody>
+      <tr><td>Red message / no sites</td><td>Finish the lot details it names.</td></tr>
+      <tr><td>Overlay wrong side or width</td><td>Plan: flip <b>Offsets go</b> or adjust <b>Width scale</b>.</td></tr>
+      <tr><td>Lots missing</td><td>Use the home-screen icon on the same phone, not a private tab.</td></tr>
+    </tbody></table></div>
   </section>
 
-  <footer>New World Laboratories · Random Site Locator field guide · matches app version 1.0.0</footer>
+  <footer>New World Laboratories · Random Site Locator · v1.1.0</footer>
 </main>
 </body>
 </html>

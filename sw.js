@@ -1,6 +1,6 @@
 // Random Site Locator – offline support.
 // Change VERSION whenever any file in the site changes, so phones pick up the new copy.
-const VERSION = "rsl-1.0.0";
+const VERSION = "rsl-1.1.0";
 const FONTS = "rsl-fonts";
 const CORE = ["./", "./index.html", "./guide.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
@@ -32,7 +32,7 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin === self.location.origin) { e.respondWith(networkFirst(req)); return; }
-  if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") {
+  if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com" || url.hostname === "cdnjs.cloudflare.com") {
     e.respondWith(caches.open(FONTS).then(c => c.match(req).then(hit => hit ||
       fetch(req).then(res => { c.put(req, res.clone()); return res; }))));
   }

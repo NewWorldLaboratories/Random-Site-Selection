@@ -10,14 +10,15 @@ A phone web app for drawing random sampling and test sites on road and pavement 
 ## What it does
 
 - **Methods:** WA 0.1 stratified (cl 4.2) and unstratified (cl 4.1), AS 1289.1.4.1 (random number method) and AS 1289.1.4.2 (stratified random number method).
-- **Site selection by location** (cores, nuclear density, sand replacement) or **by time, tonnage or volume**.
-- **Multi-lane lots:** each lane or paver run is entered in the order it was laid. Stratified sub-lots carry on from one run into the next (WA 0.1 Figure 3).
+- **Site selection by location** for cores and nuclear density.
+- **Multi-lane lots:** each lane or paver run is entered in the order it was laid. Stratified sub-lots are equal lengths and carry on from one run into the next (WA 0.1 Figure 3).
+- **Width that changes along a run:** width points with a straight-line change between them. The lateral offset is a random number times the testable width at the site.
+- **Live updates:** sites are drawn as soon as the lot is complete. Correcting the lot afterwards moves the sites using the same random numbers, and the report records the change.
 - **Joint and edge clearances:** sites can't land within a set distance of longitudinal joints, edges, transverse joints, lot ends or excluded zones.
 - **Excluded zones** such as bridges, intersections and pits, recorded on the report.
-- **Plan overlay:** a photo of the supplied drawing, lined up from two or more chainage points tapped on it, with the lot and numbered sites drawn on top. Extra points make it follow curves.
-- **On-site recording:** tested, relocated (with actual position and reason) or not tested. A measured width recalculates the offset (AS 1289.1.4.1 cl 3.2(d)(iii)).
-- **Random subset**, such as one MDD sample per group of sites.
-- **Report:** one A4 landscape page plus a site-plan page, with every draw and redraw reason recorded. Also exports CSV and a lot file (JSON).
+- **Plan overlay:** a photo, dropped file or pasted image of the supplied drawing, lined up from two or more chainage points tapped on it, with the lot and numbered sites drawn on top. Extra points make it follow curves.
+- **Measured widths:** tap a site's width in the Sites table to enter what was measured; the offset recalculates from the same random number (AS 1289.1.4.1 cl 3.2(d)(iii)).
+- **Report:** one complete A4 portrait page (lot plan, sites table, marked-up drawing, notes, signatures), with every draw and redraw reason recorded. Also exports CSV and a lot file (JSON).
 - **Several lots per trip:** lots save on the phone as the tech works, with or without signal. All of a day's reports can be saved in one file back at the lab.
 - **Offline:** once opened with signal, the app opens and works with no signal. It can be installed to the home screen.
 
@@ -33,6 +34,7 @@ Not covered: stockpile sampling (WA 0.1 cl 4.1.3 / 4.2.3) and vertical location.
 | `manifest.webmanifest` | Home-screen app name, colours and icons |
 | `icons/` | App icons and the logo used in this README |
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are |
+| `verification/` | Simulation check records (single paver run, v1.0.1) |
 
 There is no server, database, build step or account system. GitHub Pages only serves the files.
 
@@ -70,6 +72,13 @@ Random numbers come from the browser's cryptographic generator (`crypto.getRando
 ## Before first use
 
 Have the lab's quality manager check the app against the standards and the lab's procedures. Run several real lots alongside the current spreadsheets and compare the results. Record the app version that was checked. Each report prints the app version it was made with.
+
+## Changes
+
+- **1.1.0**: Report includes every working (parameters, testable stretches, and per-site distance, stretch, exact and set-out chainage, widths, r₁, r_w, offsets) so it can be back-calculated. Save PDF (made in the app) and Save HTML (carries the lot; import it to reopen). Redraw button removed (lot edits update live; changing N or method draws new numbers automatically). Report is one complete A4 portrait page. On site tab removed (widths entered live in the Sites table). Plan tab takes a dropped or pasted drawing and draggable chainage points. Lot drawing is a plan view to scale (soils lots look like the lot). Measured widths editable per site and shown on the drawing. Sites table fits a phone. Field guide rewritten.
+- **1.0.2**: Lot and Draw are one screen with live updates. Width can change along a run. Sub-lots are equal lengths for all methods; width is random only. Site chainages rounded to the nearest metre (never into a clearance). Random subset and time/tonnage removed. Phone layout fixes.
+- **1.0.1**: Sites are now tied to the exact lot they were drawn for. Changing a run's chainages, adding a paver run, or changing a clearance or excluded zone marks the sites out of date. Site cards are hidden, sites come off the map, and the report shows NOT VALID until a redraw. This fixes sub-lots and sites staying on the first paver run. Single-run simulation check added in `verification/`.
+- **1.0.0**: First release.
 
 ## Standards referenced
 
