@@ -75,6 +75,14 @@ Have the lab's quality manager check the app against the standards and the lab's
 
 ## Changes
 
+- **1.1.9**: Re-pick random numbers works straight away (no warning or reason); each earlier draw is still listed on the report as re-picked.
+- **1.1.8**: Report buttons all the same green.
+- **1.1.7**: "Re-pick random numbers" button on the Sites section: needs a reason, moves every site, and the earlier draw and reason are printed on the report.
+- **1.1.6**: Printing uses no browser page margin (the report keeps its own 10 mm), so browsers don't add date/URL/page-number lines and the report stays on one page.
+- **1.1.5**: Any print (the Print button, Ctrl+P, a phone's Share > Print) prints the full one-page report, never the shrunk screen preview. Print button shown everywhere.
+- **1.1.4**: Print and Save PDF are built in isolation from the app's screen styles, so they match the Report tab exactly (table bottom borders were being dropped). Table data centred under headings in the app and the report.
+- **1.1.3**: Report: smaller fixed notes box; sites table centred, columns sized to the page, rows stretch to fill spare space.
+- **1.1.2**: Set-out offsets to the nearest 0.1 m (never into a clearance). Printing keeps all colours and fits the printer's page width, so the table is never cut off; report trimmed to fit one A4 page.
 - **1.1.1**: Opens blank on a new phone (no sample lot); the old untouched sample lot is removed automatically.
 - **1.1.0**: Report includes every working (parameters, testable stretches, and per-site distance, stretch, exact and set-out chainage, widths, r₁, r_w, offsets) so it can be back-calculated. Save PDF (made in the app) and Save HTML (carries the lot; import it to reopen). Redraw button removed (lot edits update live; changing N or method draws new numbers automatically). Report is one complete A4 portrait page. On site tab removed (widths entered live in the Sites table). Plan tab takes a dropped or pasted drawing and draggable chainage points. Lot drawing is a plan view to scale (soils lots look like the lot). Measured widths editable per site and shown on the drawing. Sites table fits a phone. Field guide rewritten.
 - **1.0.2**: Lot and Draw are one screen with live updates. Width can change along a run. Sub-lots are equal lengths for all methods; width is random only. Site chainages rounded to the nearest metre (never into a clearance). Random subset and time/tonnage removed. Phone layout fixes.

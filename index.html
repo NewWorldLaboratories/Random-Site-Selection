@@ -124,6 +124,8 @@ a.btn{text-decoration:none}
 .tbl.fit{overflow:visible}
 .tbl.fit table{table-layout:fixed}
 .tbl.fit th,.tbl.fit td{white-space:normal;padding:7px 6px;overflow-wrap:anywhere}
+.tbl.fit th,.tbl.fit td,.tbl.fit td.n{text-align:center}
+.tbl.fit .wcell{text-align:center;margin:0 auto;display:block}
 .tbl.fit th{font-size:.68rem;line-height:1.25;letter-spacing:.03em}
 .ln-name{display:block;color:var(--muted);font-size:.72rem;line-height:1.2}
 .wc{padding:4px 4px}
@@ -137,7 +139,9 @@ a.btn{text-decoration:none}
 main.wide{max-width:1280px}
 @media (min-width:960px){.lotgrid{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start}.lotside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 120px);max-height:calc(100vh - 140px);overflow:auto}}
 
-.stats{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr))}
+.stats{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;grid-template-columns:repeat(2,minmax(0,1fr))}
+@container (min-width:560px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+#lotSummary{container-type:inline-size}
 .stats div{background:var(--surface);padding:10px 12px;display:grid;gap:2px;min-width:0}
 .stats span{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
 .stats b{font-family:var(--f-mono);font-weight:500;font-size:1.05rem;overflow-wrap:anywhere}
@@ -230,6 +234,7 @@ tr:last-child td{border-bottom:0}
 .report-host{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:#DDE5E4;padding:8px}
 @media (prefers-reduced-motion:no-preference){.btn,.steps button{transition:background .15s,border-color .15s,color .15s}}
 #printArea{display:none}
+@page{size:A4 portrait;margin:0}
 @media print{body.printing>*:not(#printArea){display:none!important}body.printing #printArea{display:block}body.printing{padding:0!important;background:#fff}body.printing::before{display:none}}
 </style>
 </head>
@@ -253,7 +258,7 @@ tr:last-child td{border-bottom:0}
 
 <script>
 "use strict";
-const APP_VERSION="1.1.1";
+const APP_VERSION="1.1.9";
 const LOGO="data:image/png;base64,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";
 /* ---------- standards ---------- */
 const METHODS = {
@@ -411,6 +416,11 @@ function roundCh(L,ch){ const iv=L.ivs.find(v=>ch>=Math.min(v[0],v[1])-1e-6&&ch<
   const lo=Math.min(iv[0],iv[1]), hi=Math.max(iv[0],iv[1]);
   const c=[Math.round(ch),Math.floor(ch),Math.ceil(ch)].sort((a,b)=>Math.abs(a-ch)-Math.abs(b-ch)).find(v=>v>=lo-1e-9&&v<=hi+1e-9);
   return c==null?ch:c; }
+// Set-out offset: nearest 0.1 m, but never rounded into the joint / edge clearance.
+function setOff(s,f,j=S){ const e=eff(s,f||{},j), c=num(j.exclJoint)||0, near=s.offD-s.offL, mw=num((f||{}).measW), W=isFinite(mw)?mw:s.W;
+  const r1=v=>Math.round(v*10)/10, cands=[r1(e.offD),Math.floor(e.offD*10+1e-9)/10,Math.ceil(e.offD*10-1e-9)/10].sort((a,b)=>Math.abs(a-e.offD)-Math.abs(b-e.offD));
+  const d=cands.find(v=>v-near>=c-1e-9&&v-near<=W-c+1e-9); const D=d==null?e.offD:d; return {d:D,e:D-near}; }
+const f1o=v=>isFinite(v)?(Math.round(v*10)/10).toFixed(1):"–";
 function siteCh(s,j=S){ if(s.chR!=null) return s.chR; const g=geometry(j); const L=g.lanes&&g.lanes.find(l=>l.id===s.lane); return L?roundCh(L,s.ch):Math.round(s.ch); }
 // Fingerprint of everything that decides where sites go. A draw is only valid for the lot it was drawn on.
 function lotSig(j){ const r=v=>{ const x=num(v); return isFinite(x)?Math.round(x*1000)/1000:null; };
@@ -471,7 +481,7 @@ function schematicSVG(j,g,d,compact,Wpx){
   if(!g||g.qty||!g.lanes.length) return "";
   // Plan view: every run sits at its real offset from the datum. Same scale both ways when it fits;
   // a long thin lot has its widths exaggerated (stated on the drawing); a deep lot is shrunk to fit.
-  const W=Wpx||1000, narrow=W<600, pad=narrow?6:16, top=compact?8:22, capH=compact?200:(narrow?300:340), nL=g.lanes.length, minH=compact?Math.max(64,nL*28):Math.max(narrow?80:90,nL*(narrow?40:38));
+  const W=Wpx||1000, narrow=W<600, pad=narrow?6:16, top=compact?8:22, capH=compact?180:(narrow?300:340), nL=g.lanes.length, minH=compact?Math.max(64,nL*28):Math.max(narrow?80:90,nL*(narrow?40:38));
   const fld=no=>(j.field&&j.field[no])||{};
   const lo=Math.min(...g.lanes.map(L=>L.lo)), hi=Math.max(...g.lanes.map(L=>L.hi)), rng=hi-lo||1;
   const mDep={}; if(d) d.sites.forEach(st=>{ const L=g.lanes.find(l=>l.id===st.lane), mw=num(fld(st.no).measW); if(L&&isFinite(mw)) mDep[L.id]=Math.max(mDep[L.id]||0,L.dOff+mw); });
@@ -620,7 +630,7 @@ function vLot(){
   <section class="card"><h2>Excluded zones</h2><p class="hint">Areas inside the lot that cannot be tested: bridge decks, intersections, pits, hand-work. The transverse clearance is applied around each zone too.</p>
   <div style="display:grid;gap:10px">${S.exclusions.map(exclCard).join("")||'<p class="hint">No excluded zones.</p>'}</div>
   <div class="row"><button class="btn" data-act="addExcl" type="button">Add excluded zone</button></div></section>
-  </div><div class="lotside"><section class="card"><div class="row"><div style="flex:1;min-width:180px"><h2>Sites</h2><p class="hint">${m.title} · ${m.clauseArea}</p></div></div>
+  </div><div class="lotside"><section class="card"><div class="row"><div style="flex:1;min-width:180px"><h2>Sites</h2><p class="hint">${m.title} · ${m.clauseArea}</p></div><button class="btn small" data-act="draw" type="button">Re-pick random numbers</button></div>
   <div id="redrawBox"></div><div id="lotSummary"></div></section></div></div>`;
 }
 function lotSummaryHTML(){
@@ -666,7 +676,7 @@ function sitesTableApp(d){
   ${d.sites.map(s=>{ const f=S.field[s.no]||{}, e=eff(s,f), mw=isFinite(num(f.measW));
     return `<tr><td><b>${s.no}</b>${sub(s)}${one?"":`<small class="ln-name">${esc(s.laneName)}</small>`}</td><td class="n"><b>${fmtPos(siteCh(s))}</b></td>
     <td class="wc"><input class="mono wcell${mw?" meas":""}" id="w_${s.no}" data-k="field.${s.no}.measW" data-lot="${f2(s.W)}" value="${mw?esc(f.measW):f2(s.W)}" inputmode="decimal" aria-label="Width at site ${s.no}, tap to enter the measured width" title="Lot width ${f2(s.W)} m. Type the measured width to recalculate the offset."></td>
-    <td class="n"><b id="od_${s.no}">${f2(e.offD)}</b></td><td class="n" id="ol_${s.no}">${f2(e.offL)}</td></tr>`; }).join("")}</tbody></table></div>
+    <td class="n"><b id="od_${s.no}">${f1o(setOff(s,f).d)}</b></td><td class="n" id="ol_${s.no}">${f1o(setOff(s,f).e)}</td></tr>`; }).join("")}</tbody></table></div>
   <p class="hint">Width shows the lot width at each site. If you measure a different width on site, tap it and type the measured width; that site's offset is recalculated from the same random number (AS 1289.1.4.1 cl 3.2(d)(iii)). Clear it to go back to the lot width. Measured widths are <span class="meas-key">highlighted</span>. The random numbers for each site are on the report.</p>`;
 }
 
@@ -719,11 +729,15 @@ function siteCard(s,d){
 }
 
 /* ---------- report: one A4 landscape page + plan page ---------- */
-const REPORT_CSS=`@page{size:A4 portrait;margin:10mm}
+const REPORT_CSS=`@page{size:A4 portrait;margin:0}
 .rp{box-sizing:border-box;width:190mm;min-height:277mm;margin:0 auto;padding:0;background:#fff;color:#0C272E;font:10.5px/1.35 Barlow,system-ui,sans-serif;display:flex;flex-direction:column;gap:2.2mm}
-.rp *{box-sizing:border-box}
+.rp,.rp *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact}
+.rp table tr:last-child td,.rp table tr:last-child th{border-bottom:1px solid #C9D6D4}
+.rp table.kv tr:last-child td{border-bottom:0}
+.rp th,.rp td{font-variant-numeric:tabular-nums}
 .rp th{text-transform:none;letter-spacing:0;white-space:normal}.rp td{letter-spacing:0}.rp p{max-width:none}
 .rp>*{flex-shrink:0}
+.rp .params{display:flex;flex-wrap:wrap;gap:1mm 5mm;font-size:9.5px;margin-bottom:1.5mm}.rp .params b{color:#0B7F62}
 .rp .row3{display:grid;grid-template-columns:1fr 1.6fr;gap:4mm;align-items:start}
 .rp+.rp{break-before:page}
 .rp .rh{display:grid;grid-template-columns:auto 1fr auto;gap:5mm;align-items:center;border-bottom:2.5px solid #16B28B;padding-bottom:2.5mm}
@@ -748,11 +762,13 @@ const REPORT_CSS=`@page{size:A4 portrait;margin:10mm}
 .rp .box table{font-size:8.5px;width:100%}.rp .box th,.rp .box td{padding:.35mm 1.4mm}
 .rp table.kv td{text-align:left;border:0;border-bottom:1px solid #E2EAE8;background:none!important;font-weight:400}.rp table.kv td.n{text-align:right;font-weight:600}
 .rp table.aud{width:100%;font-size:8.5px;table-layout:fixed}
-.rp table.aud th{font-size:7.5px;white-space:normal;padding:.8mm .8mm;vertical-align:bottom}
-.rp table.aud td{padding:.45mm 1mm;white-space:nowrap;overflow:hidden;text-overflow:clip}
-.rp table.aud tr.fx td{background:#EDF2F1!important;color:#33474B;font:italic 7px Barlow,sans-serif;white-space:normal;text-align:center;font-weight:400}
+.rp table.aud th{font-size:7px;line-height:1.15;white-space:normal;padding:.6mm .5mm;vertical-align:bottom}
+.rp .audwrap{flex:1 0 auto;display:flex;flex-direction:column}.rp .audwrap table.aud{flex:1 0 auto}
+.rp table.aud td,.rp table.aud th,.rp table.st td,.rp table.st th{text-align:center!important}
+.rp table.aud td{padding:.5mm .6mm;white-space:nowrap;overflow:hidden;text-overflow:clip}
+.rp table.aud tr.fx td{background:#EDF2F1!important;color:#33474B;font:italic 6.5px/1.15 Barlow,sans-serif;white-space:normal;text-align:center;font-weight:400;padding:.4mm .4mm}
 .rp table.aud td.hl{background:#DDF4EC!important;font-weight:700}
-.rp .planrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3mm;align-items:start}.rp .photo .plan img{max-height:46mm;max-width:40mm}.rp .photo h2{margin-bottom:.8mm}.rp .photo .fn{max-width:40mm}
+.rp .planrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3mm;align-items:start}.rp .photo .plan img{max-height:34mm;max-width:34mm}.rp .photo h2{margin-bottom:.8mm}.rp .photo .fn{max-width:40mm}
 
 .rp table{border-collapse:collapse;font-size:10px}
 .rp th,.rp td{border:1px solid #C9D6D4;padding:1mm 2mm;text-align:right;white-space:nowrap}
@@ -765,12 +781,12 @@ const REPORT_CSS=`@page{size:A4 portrait;margin:10mm}
 .rp .plan{position:relative;border:1px solid #C9D6D4;border-radius:3px;overflow:hidden;align-self:start;max-width:100%}
 .rp .plan img{display:block;max-width:100%;max-height:92mm;width:auto;height:auto}
 .rp .plan svg{position:absolute;inset:0;width:100%;height:100%}
-.rp .box{border:1px solid #C9D6D4;border-radius:3px;padding:2mm 2.5mm;font-size:9px;color:#33474B}
+.rp .box{border:1px solid #C9D6D4;border-radius:3px;padding:1.5mm 2.5mm;font-size:8.5px;line-height:1.3;color:#33474B}
 .rp .box p{margin:0 0 1mm}.rp .box p:last-child{margin:0}
 .rp .key{display:grid;gap:1mm;font-size:9px;color:#33474B}.rp .key i{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:-1px;margin-right:4px}
 .rp .fn{font-size:8.5px;color:#526B6E;margin:0}
 .rp .void{margin:0;padding:2mm 3mm;background:#FBE4E1;color:#B42318;font-weight:600;border:1.5px solid #B42318;border-radius:3px}
-.rp .notes{border:1px solid #C9D6D4;border-radius:3px;padding:2mm 2.5mm;min-height:18mm;font-size:10.5px;white-space:pre-wrap}
+.rp .notes{border:1px solid #C9D6D4;border-radius:3px;padding:2mm 2.5mm;height:16mm;overflow:hidden;font-size:10.5px;white-space:pre-wrap}
 .rp .notes span{display:block;font-size:7.5px;text-transform:uppercase;letter-spacing:.07em;color:#526B6E;font-weight:600}
 .rp .grow{flex:1 0 auto}
 .rp .keyrow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:2mm 4mm;margin-top:1.5mm;padding:1.5mm 2.5mm;border:1px solid #C9D6D4;border-radius:3px;font-size:9px;color:#33474B}.rp .keyrow i{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:-1px;margin-right:4px}
@@ -781,7 +797,7 @@ const REPORT_CSS=`@page{size:A4 portrait;margin:10mm}
 .rp .sch .st{fill:#16B28B;stroke:#fff;stroke-width:1.5}.rp .sch .stt{fill:#fff;font:600 9px "IBM Plex Mono",monospace;text-anchor:middle;dominant-baseline:central}
 .rp .sch .tk{stroke:#526B6E}.rp .sch .tt{fill:#526B6E;font:9px "IBM Plex Mono",monospace}.rp .sch .ltm{fill:#526B6E;font:9px "IBM Plex Mono",monospace}.rp .sch .slt{fill:#fff;fill-opacity:.75;font:600 8.5px "IBM Plex Mono",monospace}.rp .sch .dtm{stroke:#16B28B;stroke-width:3}.rp .sch .lnm{fill:#fff;fill-opacity:.9;font:600 10px Barlow,sans-serif}.rp .sch .mwl{stroke:#D98E00;stroke-width:3;stroke-linecap:round}.rp .sch .mws{fill:#F2A60C;fill-opacity:.55}.rp .sch .mwt{fill:#A16207;font:700 9px "IBM Plex Mono",monospace}
 @media screen{.rp{padding:10mm;width:210mm;min-height:297mm;box-shadow:0 1px 4px rgba(12,39,46,.18)}.rp+.rp{margin-top:8mm}}
-@media print{.rp{min-height:277mm}.rp table{break-inside:auto}}`;
+@media print{html,body{margin:0!important;padding:0!important}.rp{width:auto;max-width:210mm;padding:10mm;min-height:285mm}.rp table{break-inside:auto}.rp .sch svg,.rp table.aud{max-width:100%}}`;
 function reportHTML(j){ syncWidths(j); return withJob(j,()=>{
   const m=METHODS[j.method], d=curDraw(j), g=geometry(j), J=j.job, one=j.lanes.length===1;
   const iv=(a,b)=>`<div><span>${a}</span><b>${esc(b)||"–"}</b></div>`;
@@ -803,30 +819,25 @@ function reportHTML(j){ syncWidths(j); return withJob(j,()=>{
     const st=[]; let acc=0; g.lanes.forEach(Ln=>Ln.ivs.forEach(v=>{ const lo=Math.min(...v), hi=Math.max(...v), len=hi-lo;
       st.push({n:st.length+1, lane:Ln, from:Ln.dir>0?lo:hi, to:Ln.dir>0?hi:lo, len, cum:acc}); acc+=len; }));
     const stretchOf=s=>st.find(x=>x.lane.id===s.lane&&s.ch>=Math.min(x.from,x.to)-1e-6&&s.ch<=Math.max(x.from,x.to)+1e-6)||st[0];
-    const params=`<div class="box params"><p><b>Parameters</b></p><table class="kv"><tbody>
-      <tr><td>Testable length L</td><td class="n">${f3(L)} m</td></tr><tr><td>Number of sites N</td><td class="n">${N}</td></tr>
-      ${m.strat?`<tr><td>Sub-lot length S = L ÷ N</td><td class="n">${Sx.toFixed(4)} m</td></tr>`:""}
-      <tr><td>Joint / edge clearance c</td><td class="n">${f3(c)} m</td></tr><tr><td>Transverse / end clearance</td><td class="n">${f3(g.eE)} m</td></tr>
-      </tbody></table>
-      <p class="fn">Set-out chainage = exact to the nearest metre, rounded the other way if it would fall in a clearance.</p></div>`;
-    const stretches=`<div class="box"><p><b>Testable stretches</b> (lot length measured along these, in this order)</p><table class="st"><thead><tr><th>#</th><th>Run</th><th>From</th><th>To</th><th>Length (m)</th><th>Starts at (m along L)</th><th>Near edge from datum (m)</th></tr></thead><tbody>
+    const params=`<div class="params"><span><b>L</b> testable length ${f3(L)} m</span><span><b>N</b> ${N} sites</span>${m.strat?`<span><b>S</b> = L ÷ N = ${Sx.toFixed(4)} m</span>`:""}<span><b>c</b> joint / edge clearance ${f3(c)} m</span><span>end / transverse clearance ${f3(g.eE)} m</span><span>set-out: chainage to 1 m, offset to 0.1 m, never into a clearance</span></div>`;
+    const stretches=`<div class="box"><table class="st"><thead><tr><th>#</th><th>Run</th><th>From</th><th>To</th><th>Length (m)</th><th>Starts at (m along L)</th><th>Near edge from datum (m)</th></tr></thead><tbody>
       ${st.map(x=>`<tr><td>${x.n}</td><td class="rn">${esc(x.lane.name)}</td><td class="n">${posX(x.from)}</td><td class="n">${posX(x.to)}</td><td class="n">${f3(x.len)}</td><td class="n">${f3(x.cum)}</td><td class="n">${f2(x.lane.dOff)}</td></tr>`).join("")}</tbody></table></div>`;
     const rows=d.sites.map(s=>{ const f=j.field[s.no]||{}, mw=num(f.measW), hasM=isFinite(mw), Ln=g.lanes.find(l=>l.id===s.lane)||g.lanes[0];
       const dist=m.strat?((s.stratum-1)+s.rl)*Sx:s.rl*L, x=stretchOf(s), into=Math.abs(s.ch-x.from), Wlot=Ln.W(s.ch), Wuse=hasM?mw:Wlot, Wn=Math.max(0,Wuse-2*c), edge=c+s.rw*Wn, dat=Ln.dOff+edge;
-      return `<tr><td><b>${s.no}</b></td>${one?"":`<td class="rn">${esc(s.laneName.length>12?s.laneName.slice(0,11)+"…":s.laneName)}</td>`}<td class="n">${m.strat?s.stratum:"–"}</td><td class="n">${s.rl.toFixed(4)}</td><td class="n">${f3(dist)}</td><td class="n">${x.n}</td><td class="n">${f3(into)}</td><td class="n">${posX(s.ch)}</td><td class="n hl">${fmtPos(siteCh(s,j))}</td><td class="n">${f2(Wlot)}</td><td class="n">${hasM?"<b>"+f2(mw)+"*</b>":""}</td><td class="n">${s.rw.toFixed(4)}</td><td class="n">${f3(Wn)}</td><td class="n">${f3(edge)}</td><td class="n hl">${f2(dat)}</td></tr>`; }).join("");
+      return `<tr><td><b>${s.no}</b></td>${one?"":`<td class="rn">${esc(s.laneName.length>12?s.laneName.slice(0,11)+"…":s.laneName)}</td>`}<td class="n">${m.strat?s.stratum:"–"}</td><td class="n">${s.rl.toFixed(4)}</td><td class="n">${f3(dist)}</td><td class="n">${x.n}</td><td class="n">${f3(into)}</td><td class="n">${posX(s.ch)}</td><td class="n hl">${fmtPos(siteCh(s,j))}</td><td class="n">${f2(Wlot)}</td><td class="n">${hasM?"<b>"+f2(mw)+"*</b>":""}</td><td class="n">${s.rw.toFixed(4)}</td><td class="n">${f3(Wn)}</td><td class="n">${f3(edge)}</td><td class="n hl">${f1o(setOff(s,f,j).d)}</td></tr>`; }).join("");
     const pos=j.delin==="slk"?"SLK (km)":"Chainage (m)";
-    const table=`<div><h2>Sites and workings</h2><table class="aud"><thead>
-      <tr><th>Site</th>${one?"":"<th>Run</th>"}<th>Sub-lot</th><th>r₁</th><th>Distance along L (m)</th><th>Stretch</th><th>Into stretch (m)</th><th>${pos} exact</th><th>${pos} set-out</th><th>Lot width W (m)</th><th>Measured width (m)</th><th>r_w</th><th>Testable width Wₙ (m)</th><th>From near edge (m)</th><th>From datum (m) set-out</th></tr>
-      <tr class="fx"><td>i</td>${one?"":"<td></td>"}<td>${m.strat?"i":"–"}</td><td>random</td><td>${m.strat?"(i − 1 + r₁) × S":"r₁ × L"}</td><td>see stretches</td><td>distance − starts at</td><td>from ± into</td><td>nearest metre</td><td>at chainage</td><td>on site, if any</td><td>random</td><td>W − 2c</td><td>c + r_w × Wₙ</td><td>near edge + from edge</td></tr></thead><tbody>${rows}</tbody></table>
+    const table=`<div class="audwrap"><h2>Sites and workings</h2><table class="aud">${one?'<colgroup><col style="width:5%"><col style="width:6%"><col style="width:7.5%"><col style="width:8%"><col style="width:6%"><col style="width:7.5%"><col style="width:8.5%"><col style="width:7%"><col style="width:6.5%"><col style="width:6.5%"><col style="width:7.5%"><col style="width:6.5%"><col style="width:6.5%"><col style="width:7%"></colgroup>':'<colgroup><col style="width:4.5%"><col style="width:6.5%"><col style="width:5%"><col style="width:7%"><col style="width:7.5%"><col style="width:5.5%"><col style="width:7%"><col style="width:8%"><col style="width:6.5%"><col style="width:6%"><col style="width:6%"><col style="width:7%"><col style="width:6%"><col style="width:6%"><col style="width:6.5%"></colgroup>'}<thead>
+      <tr><th>Site</th>${one?"":"<th>Run</th>"}<th>Sub-lot</th><th>r₁</th><th>Along L (m)</th><th>Stretch</th><th>Into (m)</th><th>${j.delin==="slk"?"SLK":"Ch"} exact</th><th>${j.delin==="slk"?"SLK":"Ch"} set-out</th><th>Lot W (m)</th><th>Meas. W (m)</th><th>r_w</th><th>Wₙ (m)</th><th>Edge (m)</th><th>Datum (m) set-out</th></tr>
+      <tr class="fx"><td>i</td>${one?"":"<td></td>"}<td>${m.strat?"i":"–"}</td><td>random</td><td>${m.strat?"(i − 1 + r₁) × S":"r₁ × L"}</td><td>see stretches</td><td>distance − starts at</td><td>from ± into</td><td>nearest metre</td><td>at chainage</td><td>on site, if any</td><td>random</td><td>W − 2c</td><td>c + r_w × Wₙ</td><td>near edge + from edge, nearest 0.1 m</td></tr></thead><tbody>${rows}</tbody></table>
       <p class="fn">Wₙ uses the measured width where one is given (*), otherwise the lot width at that chainage. Bold columns are what is set out on site.</p></div>`;
     const ov=j.photo?overlaySVG(j,{report:true}):"", prev=j.draws.slice(0,-1);
     const photo=j.photo?`<div class="photo"><h2>Supplied drawing${ov?" with lot":""}</h2><div class="plan"><img src="${j.photo}" alt="Supplied site plan">${ov}</div>${ov?`<p class="fn">Overlay placed from ${j.cal.pts.filter(p=>isFinite(num(p.ch))).length} chainage points read off the drawing; indicative only.</p>`:""}</div>`:"";
     const info=`<div class="box"><p><b>Method.</b> ${m.strat?`The testable length L is split into ${N} equal sub-lots of length S; site i is (i − 1 + r₁) × S along L`:`Each site is r₁ × L along the testable length`}. L is measured along the testable stretches in the order listed; the distance is converted to a chainage within its stretch. Offset from the run's near edge = c + r_w × Wₙ, with Wₙ = W − 2c at the site.</p>
       <p><b>Random numbers.</b> Electronic generator (cryptographic, unseeded), 4 d.p. (WA 0.1 cl 4.3.2, AS 1289 cl 3.1(b)). Set out to within 0.5 m.${j.photo&&calFn(j)?" The overlay on the supplied drawing is placed from "+j.cal.pts.filter(p=>isFinite(num(p.ch))).length+" chainage points read off it and is indicative only.":""}</p>
       <p><b>Draw record.</b> Draw ${j.draws.length}, ${new Date(d.at).toLocaleString()}${prev.length?"; earlier draws superseded: "+prev.map((x,i)=>"draw "+(i+1)+" ("+esc(j.draws[i+1].reason||"no reason")+")").join(", "):""}.${d.log.length?" "+d.log.map(esc).join(" "):""}</p></div>`;
-    h+=`<div class="row3">${params}${stretches}</div>${table}${info}`;
+    h+=`<div><h2>Parameters and testable stretches</h2>${params}${stretches}</div>${table}${info}`;
   } else h+=`<p class="fn">No sites drawn.</p>`;
-  h+=`<div class="notes grow"><span>Notes</span>${esc(J.notes||"")}</div>
+  h+=`<div class="notes"><span>Notes</span>${esc(J.notes||"")}</div>
   <div class="sig"><div>Technician: ${esc(J.tech)}</div><div>Checked by</div><div>Date</div></div>
   <div class="foot"><span>Records per ${m.std}${m.std==="WA 0.1"?"":" cl 4 and 5"}</span><span>Generated ${new Date().toLocaleString()} · New World Laboratories Random Site Locator v${APP_VERSION}</span></div></section>`;
   return h; }); }
@@ -834,7 +845,7 @@ function lotsJSON(list){ return JSON.stringify({app:"nwl-random-site-locator",ve
 function reportDoc(list){ return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(list.length>1?"Random sites – "+list.length+" lots":fileBase(list[0]))}</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Barlow:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap"><style>body{margin:0;background:#DDE5E4;padding:8mm 0}@media print{body{background:#fff;padding:0}}${REPORT_CSS}</style></head><body>${list.map(reportHTML).join("")}<script type="application/json" id="rsl-lots">${lotsJSON(list)}<\/script></body></html>`; }
 function vReport(){
   const self=!window.claude, pr=progress(S);
-  return `<div class="rpbar noprint"><button class="btn small primary" data-act="savePDF" type="button">Save PDF</button><button class="btn small" data-act="saveReport" type="button">Save HTML</button>${self?'<button class="btn small" data-act="print" type="button">Print</button>':""}<button class="btn small" data-act="csv" type="button">Sites .csv</button><button class="btn small" data-act="exportJob" type="button">Lot file</button><button class="btn small" data-act="nextLot" type="button">Next lot</button></div>
+  return `<div class="rpbar noprint"><button class="btn small primary" data-act="savePDF" type="button">Save PDF</button><button class="btn small primary" data-act="saveReport" type="button">Save HTML</button><button class="btn small primary" data-act="print" type="button">Print</button><button class="btn small primary" data-act="csv" type="button">Sites .csv</button><button class="btn small primary" data-act="exportJob" type="button">Lot file</button><button class="btn small primary" data-act="nextLot" type="button">Next lot</button></div>
   <div class="report-host" id="rpHost"></div>
   <section class="card">${inp("job.notes","Report notes",{area:1})}<p class="hint"><b>Save PDF</b> gives the one-page A4 report to file or email. <b>Save HTML</b> gives the same report as a web page that also carries the whole lot: import it in <b>Lots</b> to open the lot again and carry on. At the lab, open Lots to save all of today's reports at once.</p></section>`;
 }
@@ -876,7 +887,7 @@ document.addEventListener("input",e=>{ const k=e.target.dataset.k; if(!k) return
   const wcell=e.target.classList.contains("wcell");
   setP(S,k,wcell&&(String(v).trim()===""||num(v)===num(e.target.dataset.lot))?"":v); save();
   if(wcell){ const no=k.split(".")[1], d=curDraw(), st=d&&d.sites.find(x=>String(x.no)===no);
-    if(st){ const ef=eff(st,S.field[no]||{}); const od=$("#od_"+no), ol=$("#ol_"+no); if(od) od.textContent=f2(ef.offD); if(ol) ol.textContent=f2(ef.offL);
+    if(st){ const ef=eff(st,S.field[no]||{}); const od=$("#od_"+no), ol=$("#ol_"+no); const so=setOff(st,S.field[no]||{}); if(od) od.textContent=f1o(so.d); if(ol) ol.textContent=f1o(so.e);
       e.target.classList.toggle("meas",isFinite(num(S.field[no].measW))); }
     return; }
   if(k.startsWith("job.")) renderHeader();
@@ -911,11 +922,9 @@ document.addEventListener("click",e=>{
     case "draw": if(geometry().errs.length){ toast("Finish the lot details first."); break; }
       if(isStale()){ if(drawSites(S,curDraw().method!==S.method?"Method changed":"Number of sites changed")){ save(); render(); toast("Sites drawn"); } break; }
       if(!S.draws.length){ if(drawSites(S,"")){ save(); render(); toast("Sites drawn"); } break; }
-      $("#redrawBox").innerHTML=`<div class="msg warn" style="gap:10px"><b>Redraw replaces the current sites.</b><span>Both draws stay on the report with your reason. Only redraw if the lot details were wrong; redrawing to get easier sites biases the result.</span>
-       <select id="rdReason"><option value="">Choose a reason…</option><option>Lot details corrected</option><option>Number of sites changed</option><option>Method changed</option><option>Lot extent changed on site</option></select>
-       <div class="row"><button class="btn small" data-act="cancelRedraw" type="button">Cancel</button><button class="btn small primary" data-act="confirmRedraw" type="button">Redraw</button></div></div>`; break;
+      if(drawSites(S,"Re-picked")){ save(); render(); toast("New random numbers picked"); } break;
     case "cancelRedraw": $("#redrawBox").innerHTML=""; break;
-    case "confirmRedraw": { const r=$("#rdReason").value; if(!r){ toast("Choose a reason for the redraw."); break; } if(drawSites(S,r)){ save(); render(); toast("Sites redrawn"); } break; }
+    case "confirmRedraw": { const r=$("#rdReason").value; if(!r){ toast("Choose a reason first."); break; } if(drawSites(S,r)){ save(); render(); toast("New random numbers picked"); } break; }
     case "st": { const no=b.dataset.no, v=b.dataset.v; S.field[no]=S.field[no]||{}; S.field[no].status=S.field[no].status===v?"":v; save(); render(); break; }
     case "cam": $("#fileCam").click(); break;
     case "pick": $("#filePick").click(); break;
@@ -926,8 +935,7 @@ document.addEventListener("click",e=>{
     case "toReport": go("report"); break;
     case "toDraw": go("lot"); break;
     case "nextLot": nextLot(); break;
-    case "print": { flush(); let pa=$("#printArea"); if(!pa){ pa=document.createElement("div"); pa.id="printArea"; document.body.appendChild(pa); }
-      pa.innerHTML=`<style>${REPORT_CSS}</style>`+reportHTML(S); document.body.classList.add("printing"); setTimeout(()=>window.print(),350); break; }
+    case "print": { preparePrint(); setTimeout(()=>window.print(),350); break; }
     case "saveReport": flush(); saveFile(fileBase(S)+".html",reportDoc([S]),"text/html"); break;
     case "savePDF": flush(); savePDF([S],fileBase(S)+".pdf",b); break;
     case "savePDFSel": { const list=[...sel].map(x=>jobs[x]).filter(Boolean).sort((a,b)=>a.created.localeCompare(b.created)); if(!list.length) break; flush(); savePDF(list,"Random sites "+today()+" ("+list.length+" lots).pdf",b); break; }
@@ -960,16 +968,22 @@ async function savePDF(list,name,btn){
   try{
     await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
     await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
-    const box=document.createElement("div"); box.style.cssText="position:fixed;left:-12000px;top:0;width:794px;background:#fff;z-index:-1";
-    box.innerHTML=`<style>${REPORT_CSS}.rp{box-shadow:none!important;margin:0!important}</style>`+list.map(reportHTML).join(""); document.body.appendChild(box);
-    await new Promise(r=>setTimeout(r,250)); if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+    let frame=null, doc=document, pages;
+    try{ frame=document.createElement("iframe"); frame.setAttribute("aria-hidden","true"); frame.style.cssText="position:fixed;left:-12000px;top:0;width:840px;height:1200px;border:0;visibility:hidden";
+      document.body.appendChild(frame);
+      const html=reportDoc(list).replace(/<script[\s\S]*?<\/script>/g,"").replace("</head>","<style>body{background:#fff!important;padding:0!important}.rp{box-shadow:none!important;margin:0 0 4mm!important}</style></head>");
+      await new Promise((res,rej)=>{ frame.onload=res; frame.onerror=rej; frame.srcdoc=html; setTimeout(res,3000); });
+      doc=frame.contentDocument; pages=doc?[...doc.querySelectorAll(".rp")]:[]; if(!pages.length) throw new Error("frame");
+    }catch(e){ if(frame) frame.remove(); frame=null; doc=document;
+      const box=document.createElement("div"); box.id="pdfBox"; box.style.cssText="position:fixed;left:-12000px;top:0;width:794px;background:#fff;z-index:-1";
+      box.innerHTML=`<style>${REPORT_CSS}.rp{box-shadow:none!important;margin:0!important}</style>`+list.map(reportHTML).join(""); document.body.appendChild(box); pages=[...box.querySelectorAll(".rp")]; }
+    await new Promise(r=>setTimeout(r,250)); if(doc.fonts&&doc.fonts.ready) await doc.fonts.ready;
     const pdf=new window.jspdf.jsPDF({orientation:"p",unit:"mm",format:"a4",compress:true});
-    const pages=[...box.querySelectorAll(".rp")];
     for(let i=0;i<pages.length;i++){ const cv=await window.html2canvas(pages[i],{scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false});
       const ph=297, pw=210, h=cv.height*pw/cv.width; if(i) pdf.addPage();
       if(h<=ph+0.5) pdf.addImage(cv.toDataURL("image/jpeg",0.92),"JPEG",0,0,pw,Math.min(h,ph));
       else { const sliceH=Math.floor(cv.width*ph/pw); for(let y=0,n=0;y<cv.height;y+=sliceH,n++){ const c2=document.createElement("canvas"); c2.width=cv.width; c2.height=Math.min(sliceH,cv.height-y); c2.getContext("2d").drawImage(cv,0,-y); if(n) pdf.addPage(); pdf.addImage(c2.toDataURL("image/jpeg",0.92),"JPEG",0,0,pw,c2.height*pw/cv.width); } } }
-    box.remove();
+    if(frame) frame.remove(); const bx=document.getElementById("pdfBox"); if(bx) bx.remove();
     await saveFile(name,pdf.output("blob"),"application/pdf");
   }catch(err){ toast("Couldn't make the PDF here. Use Print / PDF, or Save HTML and print it."); }
   finally{ if(btn){ btn.disabled=false; btn.textContent=old; } }
@@ -977,8 +991,8 @@ async function savePDF(list,name,btn){
 function fileBase(j=S){ return ["Random sites",j.job.lotNo||j.job.ticket||"lot",j.job.date].filter(Boolean).join(" ").replace(/[\\/:*?"<>|]/g,"-"); }
 function csv(){ const d=curDraw(); if(!d) return "No sites drawn\n"; const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
   if(d.basis==="qty") return ["Sample,Random r,Take at ("+S.qty.unit+"),Status",...d.sites.map(s=>[s.no,s.r.toFixed(4),s.val.toFixed(2),(S.field[s.no]||{}).status||""].join(","))].join("\n");
-  const rows=[["Lot","Site","Sub-lot","Lane","r1",posLabel(),"r_w","Wn (m)","From lane edge (m)","From datum (m)","Status","Actual position","Actual offset (m)","Reason","Measured width (m)","Subset"]];
-  d.sites.forEach(s=>{ const f=S.field[s.no]||{}, e=eff(s,f); rows.push([S.job.lotNo,s.no,s.stratum||"",s.laneName,s.rl.toFixed(4),fmtPos(siteCh(s)),s.rw.toFixed(4),s.Wn.toFixed(2),e.offL.toFixed(2),e.offD.toFixed(2),f.status||"",f.status==="moved"?fmtPos(e.ch):"",f.status==="moved"?e.offD.toFixed(2):"",f.reason||"",f.measW||"",d.subset&&d.subset.includes(s.no)?S.subset.label:""]); });
+  const rows=[["Lot","Site","Sub-lot","Run","r1","Chainage exact",posLabel()+" set-out","r_w","Lot width (m)","Measured width (m)","Wn (m)","From near edge (m)","From datum (m)","From near edge set-out (m)","From datum set-out (m)"]];
+  d.sites.forEach(s=>{ const f=S.field[s.no]||{}, e=eff(s,f), so=setOff(s,f), Wn=isFinite(num(f.measW))?Math.max(0,num(f.measW)-2*(num(S.exclJoint)||0)):s.Wn; rows.push([S.job.lotNo,s.no,s.stratum||"",s.laneName,s.rl.toFixed(4),s.ch.toFixed(3),fmtPos(siteCh(s)),s.rw.toFixed(4),s.W.toFixed(2),f.measW||"",Wn.toFixed(3),e.offL.toFixed(3),e.offD.toFixed(3),so.e.toFixed(1),so.d.toFixed(1)]); });
   return rows.map(r=>r.map(q).join(",")).join("\n"); }
 async function saveFile(name,data,mime){
   if(window.claude&&window.claude.use){ const dl=await window.claude.use("downloads").catch(()=>null);
@@ -1031,7 +1045,12 @@ function openGuide(){ let gh=$("#guideHost"); if(!gh){ gh=document.createElement
 function closeSheet(){ pendingDelete=null; $("#sheetHost").innerHTML=""; }
 
 let _rw=window.innerWidth; window.addEventListener("resize",()=>{ if(step==="report") fitReport(); if(Math.abs(window.innerWidth-_rw)>40&&(step==="lot"||step==="draw")){ _rw=window.innerWidth; if(step==="lot") refreshLot(); else render(); } });
-window.addEventListener("afterprint",()=>{ document.body.classList.remove("printing"); const pa=$("#printArea"); if(pa) pa.innerHTML=""; });
+// Whatever starts printing (the Print button, Ctrl+P, the phone's Share > Print), print the full report, never the screen.
+function preparePrint(){ flush(); let pa=$("#printArea"); if(!pa){ pa=document.createElement("div"); pa.id="printArea"; document.body.appendChild(pa); }
+  const root=pa.shadowRoot||pa.attachShadow({mode:"open"}); root.innerHTML=`<style>${REPORT_CSS}</style>`+reportHTML(S); document.body.classList.add("printing"); }
+window.addEventListener("beforeprint",()=>{ if(!document.body.classList.contains("printing")) preparePrint(); });
+if(window.matchMedia){ try{ window.matchMedia("print").addEventListener("change",m=>{ if(m.matches&&!document.body.classList.contains("printing")) preparePrint(); }); }catch(e){} }
+window.addEventListener("afterprint",()=>{ document.body.classList.remove("printing"); const pa=$("#printArea"); if(pa&&pa.shadowRoot) pa.shadowRoot.innerHTML=""; });
 loadAll().then(()=>{ render(); });
 // offline use + home-screen app: only on the hosted copy (it ships a manifest)
 if(document.querySelector('link[rel="manifest"]') && "serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost")){ try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){} }

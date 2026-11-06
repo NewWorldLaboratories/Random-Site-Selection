@@ -1,6 +1,6 @@
 // Random Site Locator – offline support.
 // Change VERSION whenever any file in the site changes, so phones pick up the new copy.
-const VERSION = "rsl-1.1.1";
+const VERSION = "rsl-1.1.9";
 const FONTS = "rsl-fonts";
 const CORE = ["./", "./index.html", "./guide.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
